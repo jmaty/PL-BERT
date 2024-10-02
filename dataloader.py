@@ -1,23 +1,15 @@
 #coding: utf-8
 
-import os
-import os.path as osp
-import time
+import logging
 import random
 import numpy as np
-import random
-
-import string
-import pickle
-
 import torch
-from torch import nn
 import torch.nn.functional as F
+from torch import nn
 from torch.utils.data import DataLoader
 
 from text_utils import TextCleaner
 
-import logging
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
@@ -26,47 +18,48 @@ random.seed(1)
 
 class FilePathDataset(torch.utils.data.Dataset):
     def __init__(self, dataset,
-                 token_maps="token_maps.pkl",
-                 tokenizer="transfo-xl-wt103",
-                 word_separator=3039, 
-                 token_separator=" ", 
-                 token_mask="M", 
+                 tokenizer=None,
+                 word_separator=3039,
+                 token_separator=" ",
+                 token_mask="M",
                  max_mel_length=512,
                  word_mask_prob=0.15,
                  phoneme_mask_prob=0.1,
                  replace_prob=0.2):
-        
+
         self.data = dataset
         self.max_mel_length = max_mel_length
         self.word_mask_prob = word_mask_prob
         self.phoneme_mask_prob = phoneme_mask_prob
         self.replace_prob = replace_prob
         self.text_cleaner = TextCleaner()
-        
+
         self.word_separator = word_separator
         self.token_separator = token_separator
         self.token_mask = token_mask
-        
-        with open(token_maps, 'rb') as handle:
-            self.token_maps = pickle.load(handle)     
-            
+
     def __len__(self):
         return len(self.data)
 
     def __getitem__(self, idx):
 
-        phonemes = self.data[idx]['phonemes']
-        input_ids = self.data[idx]['input_ids']
+        phonemes = self.data[idx]['phonemes']   # list of phonetic words
+        input_ids = self.data[idx]['input_ids'] # list of word IDs
+
+        # print(phonemes)
+        # print(input_ids)
 
         words = []
         labels = ""
         phoneme = ""
 
-        phoneme_list = ''.join(phonemes)
+        phoneme_list = ''.join(phonemes)    # phoneme string without word separators
+        # print("phoneme_list:", phoneme_list)
+
         masked_index = []
         for z in zip(phonemes, input_ids):
             z = list(z)
-            
+
             words.extend([z[1]] * len(z[0]))
             words.append(self.word_separator)
             labels += z[0] + " "
@@ -79,13 +72,15 @@ class FilePathDataset(torch.utils.data.Dataset):
                         phoneme += z[0]
                 else:
                     phoneme += self.token_mask * len(z[0]) # masked
-                    
+
                 masked_index.extend((np.arange(len(phoneme) - len(z[0]), len(phoneme))).tolist())
             else:
-                phoneme += z[0] 
+                phoneme += z[0]
 
             phoneme += self.token_separator
 
+        # phoneme: masked phoneme string with spaces between words
+        # print('phoneme:', phoneme)
 
         mel_length = len(phoneme)
         masked_idx = np.array(masked_index)
@@ -95,26 +90,42 @@ class FilePathDataset(torch.utils.data.Dataset):
             phoneme = phoneme[random_start:random_start + self.max_mel_length]
             words = words[random_start:random_start + self.max_mel_length]
             labels = labels[random_start:random_start + self.max_mel_length]
-            
+
             for m in masked_idx:
                 if m >= random_start and m < random_start + self.max_mel_length:
                     masked_index.append(m - random_start)
         else:
             masked_index = masked_idx
-            
+
         phoneme = self.text_cleaner(phoneme)
+        # phoneme: (masked) phoneme IDs incl. punctuation and spaces between words
+        # print('phoneme after cleaner:', phoneme)
         labels = self.text_cleaner(labels)
-        words = [self.token_maps[w]['token'] for w in words]
+        # labels: ground-truth phoneme label IDs incl. punctuation and spaces between words
+
+        # words: word IDs, each word = word ID repeated word_length_in_phonemes times
+        # with word_separator ID in between words
         
-        assert len(phoneme) == len(words)
+        # print("words", words)
+        # print("phoneme", phoneme)
+        # print("labels", labels)
+
+        # words = [self.token_maps[w]['token'] for w in words]
+
+        assert len(phoneme) == len(words), f'phonemes: {len(phoneme)} vs words: {len(words)}'
         assert len(phoneme) == len(labels)
-        
+
         phonemes = torch.LongTensor(phoneme)
         labels = torch.LongTensor(labels)
         words = torch.LongTensor(words)
-        
+
+        # Return:
+        # - phonemes: list of (masked) phoneme IDs incl. punctuation and spaces between words
+        # - words: list of word IDs;  each word = word ID repeated word_length_in_phonemes times
+        # - labels: list of ground-truth phoneme label IDs incl. punctuation and spaces between words
+        # - masked_index: list of masked phoneme indices
         return phonemes, words, labels, masked_index
-        
+     
 class Collater(object):
     """
     Args:
@@ -143,7 +154,7 @@ class Collater(object):
         input_lengths = []
         masked_indices = []
         for bid, (phoneme, word, label, masked_index) in enumerate(batch):
-            
+
             text_size = phoneme.size(0)
             words[bid, :text_size] = word
             labels[bid, :text_size] = label
@@ -159,9 +170,13 @@ def build_dataloader(df,
                      batch_size=4,
                      num_workers=1,
                      device='cpu',
-                     collate_config={},
-                     dataset_config={}):
+                     collate_config=None,
+                     dataset_config=None):
 
+    if collate_config is None:
+        collate_config = {}
+    if dataset_config is None:
+        dataset_config = {}
     dataset = FilePathDataset(df, **dataset_config)
     collate_fn = Collater(**collate_config)
     data_loader = DataLoader(dataset,
