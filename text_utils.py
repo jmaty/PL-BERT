@@ -1,32 +1,40 @@
 # IPA Phonemizer: https://github.com/bootphon/phonemizer
 
-import os
-import string
-
-_pad = "$"
-_punctuation = ';:,.!?¡¿—…"«»“” '
-_letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
-_letters_ipa = "ɑɐɒæɓʙβɔɕçɗɖðʤəɘɚɛɜɝɞɟʄɡɠɢʛɦɧħɥʜɨɪʝɭɬɫɮʟɱɯɰŋɳɲɴøɵɸθœɶʘɹɺɾɻʀʁɽʂʃʈʧʉʊʋⱱʌɣɤʍχʎʏʑʐʒʔʡʕʢǀǁǂǃˈˌːˑʼʴʰʱʲʷˠˤ˞↓↑→↗↘'̩'ᵻ"
-
-# Export all symbols:
-symbols = [_pad] + list(_punctuation) + list(_letters) + list(_letters_ipa)
-
-letters = list(_letters) + list(_letters_ipa)
-
-dicts = {}
-for i in range(len((symbols))):
-    dicts[symbols[i]] = i
-
 class TextCleaner:
-    def __init__(self, dummy=None):
-        self.word_index_dictionary = dicts
-        print(len(dicts))
+    def __init__(self,
+                 pad='$',
+                 punctuation=';:,.!?¡¿—…"«»“” ',
+                 letters='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
+                 ipa_phones="ɑɐɒæɓʙβɔɕçɗɖðʤəɘɚɛɜɝɞɟʄɡɠɢʛɦɧħɥʜɨɪʝɭɬɫɮʟɱɯɰŋɳɲɴøɵɸθœɶʘɹɺɾɻʀʁɽʂʃʈʧʉʊʋⱱʌɣɤʍχʎʏʑʐʒʔʡʕʢǀǁǂǃˈˌːˑʼr̝̊ʰʱʲʷˠ˞↓↑→↗↘'̩ɔ̃ᵻ",
+                 ):
+        # Make a unique list of symbols
+        self._symbols = list(dict.fromkeys(list(pad) + list(punctuation) + list(letters) + list(ipa_phones)))
+
+        assert len(self) == 178, f'Number of symbols must be 178 but it is {len(self)}'
+
+        self._make_word_index_dict()
+
     def __call__(self, text):
         indexes = []
         for char in text:
             try:
-                indexes.append(self.word_index_dictionary[char])
+                indexes.append(self.word_index_dict[char])
             except KeyError:
-                indexes.append(self.word_index_dictionary['U']) # unknown token
-#                 print(char)
+                # JMa:
+                print(f'[!] Character  {char} not defined!\n    Utterance: {text}')
         return indexes
+
+    def _make_word_index_dict(self):
+        self.word_index_dict = {}
+        for i, s in enumerate(self._symbols):
+            self.word_index_dict[s] = i
+
+    def declean(self, indexes):
+        return ''.join([self._symbols[i] for i in indexes])
+
+    def __len__(self):
+        return len(self._symbols)
+
+    @property
+    def symbols(self):
+        return self._symbols
