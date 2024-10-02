@@ -1,18 +1,19 @@
-log_dir: "Checkpoint"
+log_dir: "models/cz-phon-sentences"
 mixed_precision: "fp16"
-data_folder: "wikipedia_20220301.en.processed"
-batch_size: 192
-save_interval: 5000
+data_folder: "datasets/cz-phon-sentences.processed"
+batch_size: 24
+save_interval: 50000
 log_interval: 10
 num_process: 1 # number of GPUs
 num_steps: 1000000
 
 dataset_params:
-    tokenizer: "transfo-xl-wt103"
+    tokenizer: "/storage/plzen4-ntis/home/jmatouse/experimenty/BERT_cs_phn_ipa"
     token_separator: " " # token used for phoneme separator (space)
     token_mask: "M" # token used for phoneme mask (M)
-    word_separator: 3039 # token used for word separator (<formula>)
-    token_maps: "token_maps.pkl" # token map path
+    word_separator: 291686 # token used for word separator (ʃajmijef)
+    # word_separator: 3039 # token used for word separator (<formula>)
+    # token_maps: "token_maps.pkl" # token map path
     
     max_mel_length: 512 # max phoneme length
     
