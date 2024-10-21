@@ -49,9 +49,9 @@ class FilePathDataset(torch.utils.data.Dataset):
         # print(phonemes)
         # print(input_ids)
 
-        words = []
-        labels = ""
-        phoneme = ""
+        words = []      # list of word IDs with each ID repeated word_length_in_phonemes times
+        labels = ""     # phonetic sentence with ground-truth phonemes
+        phoneme = ""    # (masked) phonetic sentence
 
         phoneme_list = ''.join(phonemes)    # phoneme string without word separators
         # print("phoneme_list:", phoneme_list)
@@ -60,8 +60,10 @@ class FilePathDataset(torch.utils.data.Dataset):
         for z in zip(phonemes, input_ids):
             z = list(z)
 
+            # Make word consisting of its word ID repeated number of phonemes times
             words.extend([z[1]] * len(z[0]))
-            words.append(self.word_separator)
+            words.append(self.word_separator)   # add word separator
+            # Add space between ground-truth phoneme words
             labels += z[0] + " "
 
             if np.random.rand() < self.word_mask_prob:
@@ -105,7 +107,7 @@ class FilePathDataset(torch.utils.data.Dataset):
 
         # words: word IDs, each word = word ID repeated word_length_in_phonemes times
         # with word_separator ID in between words
-        
+
         # print("words", words)
         # print("phoneme", phoneme)
         # print("labels", labels)
@@ -125,7 +127,7 @@ class FilePathDataset(torch.utils.data.Dataset):
         # - labels: list of ground-truth phoneme label IDs incl. punctuation and spaces between words
         # - masked_index: list of masked phoneme indices
         return phonemes, words, labels, masked_index
-     
+
 class Collater(object):
     """
     Args:
@@ -162,6 +164,12 @@ class Collater(object):
             input_lengths.append(text_size)
             masked_indices.append(masked_index)
 
+        # Return:
+        # - words: list of word IDs;  each word = word ID repeated word_length_in_phonemes times
+        # - labels: list of ground-truth phoneme label IDs incl. punctuation and spaces between words
+        # - phonemes: list of (masked) phoneme IDs incl. punctuation and spaces between words
+        # - input_lengths: list of lengths of input phoneme strings
+        # - masked_index: list of masked phoneme indices
         return words, labels, phonemes, input_lengths, masked_indices
 
 
