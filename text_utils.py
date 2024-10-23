@@ -1,33 +1,21 @@
-# IPA Phonemizer: https://github.com/bootphon/phonemizer
+import csv
 
 class TextCleaner:
-    def __init__(self,
-                 pad='$',
-                 punctuation=';:,.!?¡¿—…"«»“” ',
-                 letters='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
-                 ipa_phones="ɑɐɒæɓʙβɔɕçɗɖðʤəɘɚɛɜɝɞɟʄɡɠɢʛɦɧħɥʜɨɪʝɭɬɫɮʟɱɯɰŋɳɲɴøɵɸθœɶʘɹɺɾɻʀʁɽʂʃʈʧʉʊʋⱱʌɣɤʍχʎʏʑʐʒʔʡʕʢǀǁǂǃˈˌːˑʼr̝̊ʰʱʲʷˠ˞↓↑→↗↘'̩ɔ̃ᵻ",
-                 ):
-        # Make a unique list of symbols
-        self._symbols = list(dict.fromkeys(list(pad) + list(punctuation) + list(letters) + list(ipa_phones)))
-
-        assert len(self) == 178, f'Number of symbols must be 178 but it is {len(self)}'
-
-        self._make_word_index_dict()
+    def __init__(self, symbols, pad='_'):
+        self._symbols = symbols
+        self._pad = pad
+        assert len(self) == 81, f'Number of symbols must be 81 but it is {len(self)}'
+        assert pad in symbols, f'Pad symbol ({pad}) is not included in symbols!'
 
     def __call__(self, text):
         indexes = []
-        for char in text:
+        for c in text:
             try:
-                indexes.append(self.word_index_dict[char])
+                indexes.append(self._symbols[c])
             except KeyError:
                 # JMa:
-                print(f'[!] Character  {char} not defined!\n    Utterance: {text}')
+                print(f'[!] Character  {c} not defined!\n    Utterance: {text}')
         return indexes
-
-    def _make_word_index_dict(self):
-        self.word_index_dict = {}
-        for i, s in enumerate(self._symbols):
-            self.word_index_dict[s] = i
 
     def declean(self, indexes):
         return ''.join([self._symbols[i] for i in indexes])
@@ -38,3 +26,14 @@ class TextCleaner:
     @property
     def symbols(self):
         return self._symbols
+
+    @property
+    def pad(self):
+        return self._pad, self._symbols[self._pad]
+
+
+def load_symbol_dict(fpath):
+    with open(fpath, 'r', encoding='utf-8') as f:
+        reader = csv.reader(f, delimiter=',', quotechar='"')
+        symbol_dict = {row[0]: int(row[1]) for row in reader}
+    return symbol_dict
