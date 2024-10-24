@@ -15,6 +15,5 @@ monotonic_align/monotonic_align
 wiki_phoneme
 datasets
 models
-output_logs
-output_notebooks
+outputs
 *.wav
