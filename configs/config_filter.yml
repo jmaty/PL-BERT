@@ -1,0 +1,21 @@
+inp_paragraph_file: '../BERT_cs/WIKI_C4Cleaned.txt'
+out_sentence_file: '../BERT_cs/WIKI_C4Cleaned.sent.txt'
+not_supported_chars_file: './not_supported_chars.txt'
+ttstool_bin: './tts_tool/tts_tool'
+ttstool_data: './tts_tool/data/frontend_normalize.json'
+
+supported_chars:
+    lower_chars: 'aáäbcčdďeéěfghiíjklmnňoóöpqrřsštťuúůüvwxyýzž'
+    upper_chars: 'AÁÄBCČDĎEÉĚFGHIÍJKLMNŇOÓÖPQRŘSŠTŤUÚŮÜVWXYÝZŽ'
+    digits: '0123456789'
+    whites_spaces: ' '
+    punct: '.,;:-?'
+
+replacements:
+    '–': '-'
+    '—': '-'
+    '−': '-'
+    '"': ''
+    "'": ''
+    "„": ''
+    "“": ''
