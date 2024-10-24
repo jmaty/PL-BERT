@@ -1,0 +1,1164 @@
+[
+	{
+		"comment": "ukazkove pravidlo",
+		"active": false
+	},
+	{
+		"action": "Rules",
+		"rules": [
+			{ "condition": { "type": "text" }, "data": { "kept": true } }
+		]
+	},
+	{
+		"action": "Rules",
+		"rules": [
+			{ "search": "ČESKÁ REPUBLIKA", "matchCase": true, "replace": "Česká republika"},
+			{ "search": "ROZHODNUTÍ", "matchCase": true, "replace": "Rozhodnutí"},
+			{ "search": "ROZSUDEK", "matchCase": true, "replace": "Rozsudek"},
+			{ "search": "JMÉNEM REPUBLIKY", "matchCase": true, "replace": "jménem republiky"},
+			{ "search": "USNESENÍ", "matchCase": true, "replace": "Usnesení"},
+			{ "search": "U S N E S E N Í", "matchCase": true, "replace": "Usnesení"},
+			{ "search": "u k l á d á", "matchCase": true, "replace": "ukládá"},
+			{ "search": "t a k t o", "matchCase": true, "replace": "takto"},
+			{ "search": "z r u š u j e", "matchCase": true, "replace": "zrušuje"},
+			{ "search": "j e v i n n e n", "matchCase": true, "replace": "je vinnen"},
+			{ "search": "j s o u v i n n i", "matchCase": true, "replace": "jsou vinni"},
+			{ "search": "j e v i n n a", "matchCase": true, "replace": "je vinna"},
+			{ "search": "t e d y", "matchCase": true, "replace": "tedy"},
+			{ "search": "t í m s p á c h a l", "matchCase": true, "replace": "tím spáchal"},
+			{ "search": "t í m s p á c h a l a", "matchCase": true, "replace": "tím spáchala"},
+			{ "search": "t í m s p á c h a l i", "matchCase": true, "replace": "tím spáchali"},
+			{ "search": "a o d s u z u j e s e", "matchCase": true, "replace": "a odsuzuje se"},
+			{ "search": "a o d s u z u j í s e", "matchCase": true, "replace": "a odsuzují se"},
+			{ "search": "s e z a m í t á", "matchCase": true, "replace": "se zamítá"},
+			{ "search": "j e", "matchCase": true, "replace": "je"},
+			{ "search": "ž e", "matchCase": true, "replace": "že"},
+			{ "search": "–", "matchCase": true, "replace": "-"}
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "rodné číslo",
+		"rules": [
+			{ "firstCharHint": "d", "regex": "\\d{6}\\/\\d{4}", "mergeInto": "special", "regexMap": [ "value" ], "data": { "special": "rodne_cislo"}, "left": ["r.č.", "r. č.", "rodné číslo", "rč", "RČ"]}
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "registrační značka",
+		"rules": [
+			{"regex": "\\w{3}\\s\\d{2}\\-?\\d{2}", "matchcase":true, "mergeInto": "special", "regexMap": [ "value" ], "data": { "special": "reg_znacka" }, "left": ["RZ", "reg. zn.", "značka", "rz"]}
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "VIN",
+		"rules": [
+			{ "regex": "([A-Z][A-Z\\d]{10,20})", "matchCase": true, "replace": "$1", "data": {"spell": true}, "left": ["VIN", "vin", "vinko"]}
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "variabilní symbol",
+		"rules": [
+			{ "regex": "(\\d{3,10})", "wholeWord": true, "replace": "$1", "data": {"spell": true}, "left": ["variabilní symbol", "variabilním symbolem"]},
+			{ "regex": "(\\d+)( )?x", "replace": "$1 krát", "left": ["variabilní symbol", "variabilním symbolem"]}
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "čísla účtů a smluv",
+		"rules": [
+			{ "firstCharHint": "d", "regex": "(\\d{1,5}\\-)?(\\d{6,10})(\\/)(\\d{4})", "mergeInto": "special", "regexMap": [ "value" ], "data": { "special": "cislo_uctu"}, "left": ["číslo", "č.", "účet", "číslem","účtu"]},
+            { "firstCharHint": "d", "regex": "(\\d{6,10})(\\-\\d{1,5})?", "mergeInto": "special", "regexMap": [ "value" ], "data": { "special": "cislo_uctu"}, "left": ["číslo", "č.", "číslem"]}
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "číslo spisu    54 T 2/2011 - 2405",
+		"rules": [ 
+		    {"regex": "([0123456789\\/]){7,14}[A-Za-z\\/]{2,8}([-–]\\d{1,4})?", "wholeWord": true, "left:": ["č.j.", "čj.", "Výst."], "mergeInto": "special", "regexMap": [ "value" ], "data": { "special": "rozsudek/cislo_spisu" }},
+			{ "regex": "\\w{1,4}\\/\\d{1,4}\\/20[0-3]\\d", "wholeWord": true, "mergeInto": "special", "regexMap": [ "value" ], "data": { "special": "rozsudek/cislo_spisu" }},
+			{ "regex": "\\w{1,4}\\/\\d{1,4}\\/19[0-9]\\d", "wholeWord": true, "mergeInto": "special", "regexMap": [ "value" ], "data": { "special": "rozsudek/cislo_spisu" } },
+		    { "regex": "\\d{1,4}\\/19\\d{2}\\/\\w{1,4}", "wholeWord": true, "leftCondition": {"type": "text"}, "mergeInto": "special", "regexMap": [ "value" ], "data": { "special": "rozsudek/cislo_spisu" } },
+		    { "regex": "\\d{1,3}\\s[A-Z]\\s\\d{1,3}\\/\\d{2,4}\\s?\\-\\sd{1,4}", "wholeWord": false, "mergeInto": "special", "regexMap": [ "value" ], "data": { "special": "rozsudek/cislo_spisu" } },
+            { "regex": "\\d{1,3}\\s[A-Z][a-z]\\s\\d{1,3}\\/\\d{2,4}\\s?\\-\\s?d{1,4}", "wholeWord": false, "mergeInto": "special", "regexMap": [ "value" ], "data": { "special": "rozsudek/cislo_spisu" } },
+			{ "regex": "\\d{1,3}(\\s)?\\w{1,4}\\s\\d{1,4}\\/20[0-3]\\d(\\-[^\\d\\s])?(\\-\\d{1,3})?([a-z])?(\\s[-–]\\s\\d{1,4})?", "wholeWord": true, "mergeInto": "special", "regexMap": [ "value" ], "data": { "special": "rozsudek/cislo_spisu" } },
+			{ "regex": "\\d{1,3}(\\s)?\\w{1,4}\\s\\d{1,4}\\/19\\d{2}(\\-[^\\d\\s])?(\\-\\d{1,3})?([a-z])?(\\s?[-–]?\\s?\\d{1,4})?", "wholeWord": true, "mergeInto": "special", "regexMap": [ "value" ], "data": { "special": "rozsudek/cislo_spisu" } },
+			{ "regex": "\\d{1,6}\\/20[0-3]\\d(\\-[^\\d\\s])?(\\-\\d{1,3})?([a-z])?", "wholeWord": true, "leftCondition": {"type": "text"}, "mergeInto": "special", "regexMap": [ "value" ], "data": { "special": "rozsudek/cislo_spisu" } },
+			{ "regex": "\\d{1,6}\\/19\\d{2}(\\-[^\\d\\s])?(\\-\\d{1,3})?([a-z])?", "wholeWord": true, "leftCondition": {"type": "text"}, "mergeInto": "special", "regexMap": [ "value" ], "data": { "special": "rozsudek/cislo_spisu" } },
+            { "regex": "\\d{1,2}\\s[A-Za-z]{2,4}\\s\\d{2,4}\\/\\d{2}(\\s?[-–]\\s?\\d{1,4})?", "wholeWord": true, "left": ["značka", "zn."], "mergeInto": "special", "regexMap": [ "value" ], "data": { "special": "rozsudek/cislo_spisu" } }
+		]
+	},
+	{
+		"action": "Rules",
+		"rules": [
+			{ "regex": "\\.\\.\\.", "wholeWord": true, "data": {"check": true}},
+			{ "regex": "xxx", "wholeWord": true, "data": {"check": true}}
+		]
+	},
+	{
+		"action": "Rules",
+        "rules": [
+			{ "regex": "( )(\\d+)( )(\\()([a-záéíěóůúýčřžšťďň]+)(\\))", "replace": " $5", "wholeWord": false}
+		]
+	},
+    {
+		"action": "Rules",
+		"comment": "prokládání mezerami",
+		"rules": [
+			{ "searchSpecial": "interlaced_word", "replace": "$0|removeSpaces", "data": {"check": true }}
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "1x, 2x, 3x  apod.",
+		"rules": [
+			{ "regex": "(\\d+)( )?x", "replace": "$1 krát", "matchcase":true}
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "21% apod.",
+		"rules": [
+			{ "regex": "(\\d+)(%)", "replace": "$1$2", "data":{"check":true, "spell":true}}
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "spelování písmen, pokud tomu předcházejí číslice, nebo naopak",
+		"rules": [
+			{ "firstCharHint": "d", "regex": "\\d+[a-zA-Z]", "data": {"spell": true, "wholeNumber": true}, "matchcase":true},
+			{"regex": "[a-zA-Z]\\d+", "data": {"spell": true, "wholeNumber": true}, "matchcase":true}
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "spelování písmen, pokud je ve skupině &",
+		"rules": [
+			{"regex": "[a-zA-Z]\\&[a-zA-Z]", "data": {"spell": true}, "matchcase":true}
+		]
+	},
+	{
+		"action": "Rules",
+		"rules": [
+			{ "condition": { "type": "whiteSpace" }, "left": "poslyšte", "right": "rozsudek", "data": {"break": false} },
+			{ "condition": { "type": "whiteSpace" }, "left": "rozsudek", "right": "jménem", "data": {"break": false} },
+			{ "condition": { "type": "whiteSpace" }, "left": "jménem", "right": "republiky", "data": {"break": false} }
+		]
+	},
+	
+	
+	
+	{
+		"action": "Rules",
+		"comment": "vydání",
+		"TODO": "předělat - mělo by se jen nastavit, že to je řadová číslovka, střední rod",
+		"rules": [
+			{ "search": "1.",  "right": ["vydání", "rozšířené vydání"], "replace": "první" },
+			{ "search": "2.",  "right": ["vydání", "rozšířené vydání"], "replace": "druhé" },
+			{ "search": "3.",  "right": ["vydání", "rozšířené vydání"], "replace": "třetí" },
+			{ "search": "4.",  "right": ["vydání", "rozšířené vydání"], "replace": "čtvrté" },
+			{ "search": "5.",  "right": ["vydání", "rozšířené vydání"], "replace": "páté" },
+			{ "search": "6.",  "right": ["vydání", "rozšířené vydání"], "replace": "šesté" },
+			{ "search": "7.",  "right": ["vydání", "rozšířené vydání"], "replace": "sedmé" },
+			{ "search": "8.",  "right": ["vydání", "rozšířené vydání"], "replace": "osmé" },
+			{ "search": "9.",  "right": ["vydání", "rozšířené vydání"], "replace": "deváté" },
+			{ "search": "10.",  "right": ["vydání", "rozšířené vydání"], "replace": "desáté" },
+			{ "search": "I.",  "right": ["vydání", "rozšířené vydání"], "replace": "první" },
+			{ "search": "II.",  "right": ["vydání", "rozšířené vydání"], "replace": "druhé" },
+			{ "search": "III.",  "right": ["vydání", "rozšířené vydání"], "replace": "třetí" },
+			{ "search": "IV.",  "right": ["vydání", "rozšířené vydání"], "replace": "čtvrté" },
+			{ "search": "V.",  "right": ["vydání", "rozšířené vydání"], "replace": "páté" },
+			{ "search": "VI.",  "right": ["vydání", "rozšířené vydání"], "replace": "šesté" },
+			{ "search": "VII.",  "right": ["vydání", "rozšířené vydání"], "replace": "sedmé" },
+			{ "search": "VIII.",  "right": ["vydání", "rozšířené vydání"], "replace": "osmé" },
+			{ "search": "IX.",  "right": ["vydání", "rozšířené vydání"], "replace": "deváté" },
+			{ "search": "X.",  "right": ["vydání", "rozšířené vydání"], "replace": "desáté" }
+		]
+	},
+
+
+	{
+		"action": "Rules",
+		"comment": "frázování - interpunkce",
+		"rules": [
+			{ "search": ",", "wholeWord": false, "right": " ", "rawContext": true, "matchCase": true, "data": { "type": "phraseBreak" } }
+			]
+	},
+
+	{ "action": "TokenData", "config": "proper_nouns.json" },
+	{ "action": "TokenData", "config": "prepositions.json" },
+	{ "action": "TokenData", "config": "names_all.json" },
+
+	{
+		"action": "Rules",
+		"rules": [		
+            { "search": "Ing.", "matchCase": true, "replace": "inženýr", "data":{"check": true}, "rightCondition": { "properNounGender": "masculine", "properNounCase": 1, "norsure": true}},            
+            { "search": "Ing.", "matchCase": true, "replace": "inženýr", "rightCondition": { "properNounGender": "masculine", "properNounCase": 1}},
+            { "search": "Ing.", "matchCase": true, "replace": "inženýra", "rightCondition": { "properNounGender": "masculine", "properNounCase": 2 } },
+            { "search": "Ing.", "matchCase": true, "replace": "inženýra", "rightCondition": { "properNounGender": "masculine", "properNounCase": 24} },
+            { "search": "Ing.", "matchCase": true, "replace": "inženýrovi", "rightCondition": { "properNounGender": "masculine", "properNounCase": 3} },
+            { "search": "Ing.", "matchCase": true, "replace": "inženýrovi", "data":{"check":true}, "rightCondition": { "properNounGender": "masculine", "properNounCase": 36} },
+            { "search": "Ing.", "matchCase": true, "replace": "inženýra", "rightCondition": { "properNounGender": "masculine", "properNounCase": 4} },
+            { "search": "Ing.", "matchCase": true, "replace": "inženýrovi", "rightCondition": { "properNounGender": "masculine", "properNounCase": 6} },
+            { "search": "Ing.", "matchCase": true, "replace": "inženýrem", "rightCondition": { "properNounGender": "masculine", "properNounCase": 7} },
+            { "search": "Ing.", "matchCase": true, "replace": "inženýrem", "left": ["zast.", "zast.:"], "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "Ing.", "matchCase": true, "replace": "inženýra", "data":{"check":true}, "leftCondition": { "caseIndicator": 2}, "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "Ing.", "matchCase": true, "replace": "inženýra", "data":{"check":true}, "leftCondition": { "caseIndicator": 4}, "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "Ing.", "matchCase": true, "replace": "inženýrovi", "data":{"check":true}, "leftCondition": { "caseIndicator": 6}, "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "Ing.", "matchCase": true, "replace": "inženýrem", "data":{"check":true}, "leftCondition": { "caseIndicator": 7}, "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "Ing.", "matchCase": true, "replace": "inženýrka", "rightCondition": { "properNounGender": "feminine", "properNounCase": 1 } },
+            { "search": "Ing.", "matchCase": true, "replace": "inženýrky", "rightCondition": { "properNounGender": "feminine", "properNounCase": 2 } },
+            { "search": "Ing.", "matchCase": true, "replace": "inženýrce", "rightCondition": { "properNounGender": "feminine", "properNounCase": 3 } },
+            { "search": "Ing.", "matchCase": true, "replace": "inženýrce", "rightCondition": { "properNounGender": "feminine", "properNounCase": 36 } },
+            { "search": "Ing.", "matchCase": true, "replace": "inženýrku", "rightCondition": { "properNounGender": "feminine", "properNounCase": 4 } },
+            { "search": "Ing.", "matchCase": true, "replace": "inženýrce", "rightCondition": { "properNounGender": "feminine", "properNounCase": 6 } },
+            { "search": "Ing.", "matchCase": true, "replace": "inženýrkou", "rightCondition": { "properNounGender": "feminine", "properNounCase": 7 } },
+            { "search": "Ing.", "matchCase": true, "replace": "inženýrkou", "left": ["zast.", "zast.:"], "rightCondition": { "properNounGender": "feminine"}},
+            { "search": "Ing.", "matchCase": true, "replace": "inženýrky", "data":{"check":true}, "leftCondition": { "caseIndicator": 2}, "rightCondition": { "properNounGender": "feminine"}},
+            { "search": "Ing.", "matchCase": true, "replace": "inženýrku", "data":{"check":true}, "leftCondition": { "caseIndicator": 4}, "rightCondition": { "properNounGender": "feminine"}},
+            { "search": "Ing.", "matchCase": true, "replace": "inženýrce", "data":{"check":true}, "leftCondition": { "caseIndicator": 6}, "rightCondition": { "properNounGender": "feminine"}},
+            { "search": "Ing.", "matchCase": true, "replace": "inženýrkou", "data":{"check":true}, "leftCondition": { "caseIndicator": 7}, "rightCondition": { "properNounGender": "feminine"}},
+            { "search": "Ing.", "matchCase": true, "replace": "inženýrka", "data":{"check":true}, "rightCondition": { "properNounGender": "feminine"}},
+			{ "search": "Ing.", "matchCase": true, "replace": "inženýr", "data":{"check":true}},	
+
+            { "search": "Bc.", "matchCase": true, "replace": "bakalář", "rightCondition": { "properNounGender": "masculine", "properNounCase": 1}},
+            { "search": "Bc.", "matchCase": true, "replace": "bakaláře", "rightCondition": { "properNounGender": "masculine", "properNounCase": 2 } },
+            { "search": "Bc.", "matchCase": true, "replace": "bakaláře", "rightCondition": { "properNounGender": "masculine", "properNounCase": 24} },
+            { "search": "Bc.", "matchCase": true, "replace": "bakaláři", "rightCondition": { "properNounGender": "masculine", "properNounCase": 3} },
+            { "search": "Bc.", "matchCase": true, "replace": "bakaláři", "data":{"check":true}, "rightCondition": { "properNounGender": "masculine", "properNounCase": 36} },
+            { "search": "Bc.", "matchCase": true, "replace": "bakaláře", "rightCondition": { "properNounGender": "masculine", "properNounCase": 4} },
+            { "search": "Bc.", "matchCase": true, "replace": "bakaláři", "rightCondition": { "properNounGender": "masculine", "properNounCase": 6} },
+            { "search": "Bc.", "matchCase": true, "replace": "bakalářem", "rightCondition": { "properNounGender": "masculine", "properNounCase": 7} },
+            { "search": "Bc.", "matchCase": true, "replace": "bakalářem", "left": ["zast.", "zast.:"], "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "Bc.", "matchCase": true, "replace": "bakaláře", "data":{"check":true}, "leftCondition": { "caseIndicator": 2}, "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "Bc.", "matchCase": true, "replace": "bakaláře", "data":{"check":true}, "leftCondition": { "caseIndicator": 4}, "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "Bc.", "matchCase": true, "replace": "bakaláři", "data":{"check":true}, "leftCondition": { "caseIndicator": 6}, "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "Bc.", "matchCase": true, "replace": "bakalářem", "data":{"check":true}, "leftCondition": { "caseIndicator": 7}, "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "Bc.", "matchCase": true, "replace": "bakalářka", "rightCondition": { "properNounGender": "feminine", "properNounCase": 1 } },
+            { "search": "Bc.", "matchCase": true, "replace": "bakalářky", "rightCondition": { "properNounGender": "feminine", "properNounCase": 2 } },
+            { "search": "Bc.", "matchCase": true, "replace": "bakalářce", "rightCondition": { "properNounGender": "feminine", "properNounCase": 3 } },
+            { "search": "Bc.", "matchCase": true, "replace": "bakalářce", "rightCondition": { "properNounGender": "feminine", "properNounCase": 36 } },
+            { "search": "Bc.", "matchCase": true, "replace": "bakalářku", "rightCondition": { "properNounGender": "feminine", "properNounCase": 4 } },
+            { "search": "Bc.", "matchCase": true, "replace": "bakalářce", "rightCondition": { "properNounGender": "feminine", "properNounCase": 6 } },
+            { "search": "Bc.", "matchCase": true, "replace": "bakalářkou", "rightCondition": { "properNounGender": "feminine", "properNounCase": 7 } },
+            { "search": "Bc.", "matchCase": true, "replace": "bakalářkou", "left": ["zast.", "zast.:"], "rightCondition": { "properNounGender": "feminine"}},
+            { "search": "Bc.", "matchCase": true, "replace": "bakalářky", "data":{"check":true}, "leftCondition": { "caseIndicator": 2}, "rightCondition": { "properNounGender": "feminine"}},
+            { "search": "Bc.", "matchCase": true, "replace": "bakalářku", "data":{"check":true}, "leftCondition": { "caseIndicator": 4}, "rightCondition": { "properNounGender": "feminine"}},
+            { "search": "Bc.", "matchCase": true, "replace": "bakalářce", "data":{"check":true}, "leftCondition": { "caseIndicator": 6}, "rightCondition": { "properNounGender": "feminine"}},
+            { "search": "Bc.", "matchCase": true, "replace": "bakalářkou", "data":{"check":true}, "leftCondition": { "caseIndicator": 7}, "rightCondition": { "properNounGender": "feminine"}},
+            { "search": "Bc.", "matchCase": true, "replace": "bakalářka", "data":{"check":true}, "rightCondition": { "properNounGender": "feminine"}},
+			{ "search": "Bc.", "matchCase": true, "matchCase": true, "replace": "bakalář", "data":{"check":true}},	
+
+			{ "search": "Mgr.", "matchCase": true, "replace": "magistr", "rightCondition": { "properNounGender": "masculine", "properNounCase": 1}},
+            { "search": "Mgr.", "matchCase": true, "replace": "magistra", "rightCondition": { "properNounGender": "masculine", "properNounCase": 2 } },
+            { "search": "Mgr.", "matchCase": true, "replace": "magistra", "rightCondition": { "properNounGender": "masculine", "properNounCase": 24} },
+            { "search": "Mgr.", "matchCase": true, "replace": "magistrovi", "rightCondition": { "properNounGender": "masculine", "properNounCase": 3} },
+            { "search": "Mgr.", "matchCase": true, "replace": "magistrovi", "data":{"check":true}, "rightCondition": { "properNounGender": "masculine", "properNounCase": 36} },
+            { "search": "Mgr.", "matchCase": true, "replace": "magistra", "rightCondition": { "properNounGender": "masculine", "properNounCase": 4} },
+            { "search": "Mgr.", "matchCase": true, "replace": "magistrovi", "rightCondition": { "properNounGender": "masculine", "properNounCase": 6} },
+            { "search": "Mgr.", "matchCase": true, "replace": "magistrem", "rightCondition": { "properNounGender": "masculine", "properNounCase": 7} },
+            { "search": "Mgr.", "matchCase": true, "replace": "magistrem", "left": ["zast.", "zast.:"], "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "Mgr.", "matchCase": true, "replace": "magistra", "data":{"check":true}, "leftCondition": { "caseIndicator": 2}, "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "Mgr.", "matchCase": true, "replace": "magistra", "data":{"check":true}, "leftCondition": { "caseIndicator": 4}, "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "Mgr.", "matchCase": true, "replace": "magistrovi", "data":{"check":true}, "leftCondition": { "caseIndicator": 6}, "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "Mgr.", "matchCase": true, "replace": "magistrem", "data":{"check":true}, "leftCondition": { "caseIndicator": 7}, "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "Mgr.", "matchCase": true, "replace": "magistra", "rightCondition": { "properNounGender": "feminine", "properNounCase": 1 } },
+            { "search": "Mgr.", "matchCase": true, "replace": "magistry", "rightCondition": { "properNounGender": "feminine", "properNounCase": 2 } },
+            { "search": "Mgr.", "matchCase": true, "replace": "magistře", "rightCondition": { "properNounGender": "feminine", "properNounCase": 3 } },
+            { "search": "Mgr.", "matchCase": true, "replace": "magistře", "rightCondition": { "properNounGender": "feminine", "properNounCase": 36 } },
+            { "search": "Mgr.", "matchCase": true, "replace": "magistru", "rightCondition": { "properNounGender": "feminine", "properNounCase": 4 } },
+            { "search": "Mgr.", "matchCase": true, "replace": "magistře", "rightCondition": { "properNounGender": "feminine", "properNounCase": 6 } },
+            { "search": "Mgr.", "matchCase": true, "replace": "magistrou", "rightCondition": { "properNounGender": "feminine", "properNounCase": 7 } },
+            { "search": "Mgr.", "matchCase": true, "replace": "magistrou", "left": ["zast.", "zast.:"], "rightCondition": { "properNounGender": "feminine"}},
+            { "search": "Mgr.", "matchCase": true, "replace": "magistry", "data":{"check":true}, "leftCondition": { "caseIndicator": 2}, "rightCondition": { "properNounGender": "feminine"}},
+            { "search": "Mgr.", "matchCase": true, "replace": "magistru", "data":{"check":true}, "leftCondition": { "caseIndicator": 4}, "rightCondition": { "properNounGender": "feminine"}},
+            { "search": "Mgr.", "matchCase": true, "replace": "magistře", "data":{"check":true}, "leftCondition": { "caseIndicator": 6}, "rightCondition": { "properNounGender": "feminine"}},
+            { "search": "Mgr.", "matchCase": true, "replace": "magistrou", "data":{"check":true}, "leftCondition": { "caseIndicator": 7}, "rightCondition": { "properNounGender": "feminine"}},
+            { "search": "Mgr.", "matchCase": true, "replace": "magistra", "data":{"check":true}, "rightCondition": { "properNounGender": "feminine"}},
+			{ "search": "Mgr.", "matchCase": true, "matchCase": true, "replace": "magistr", "data":{"check":true}},	
+
+			{ "search": "doc.", "replace": "docent", "rightCondition": { "properNounGender": "masculine", "properNounCase": 1}},
+            { "search": "doc.", "replace": "docenta", "rightCondition": { "properNounGender": "masculine", "properNounCase": 2 } },
+            { "search": "doc.", "replace": "docenta", "rightCondition": { "properNounGender": "masculine", "properNounCase": 24} },
+            { "search": "doc.", "replace": "docentovi", "rightCondition": { "properNounGender": "masculine", "properNounCase": 3} },
+            { "search": "doc.", "replace": "docentovi", "data":{"check":true}, "rightCondition": { "properNounGender": "masculine", "properNounCase": 36} },
+            { "search": "doc.", "replace": "docenta", "rightCondition": { "properNounGender": "masculine", "properNounCase": 4} },
+            { "search": "doc.", "replace": "docentovi", "rightCondition": { "properNounGender": "masculine", "properNounCase": 6} },
+            { "search": "doc.", "replace": "docentem", "rightCondition": { "properNounGender": "masculine", "properNounCase": 7} },
+            { "search": "doc.", "replace": "docentem", "left": ["zast.", "zast.:"], "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "doc.", "replace": "docenta", "data":{"check":true}, "leftCondition": { "caseIndicator": 2}, "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "doc.", "replace": "docenta", "data":{"check":true}, "leftCondition": { "caseIndicator": 4}, "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "doc.", "replace": "docentovi", "data":{"check":true}, "leftCondition": { "caseIndicator": 6}, "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "doc.", "replace": "docentem", "data":{"check":true}, "leftCondition": { "caseIndicator": 7}, "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "doc.", "replace": "docentka", "rightCondition": { "properNounGender": "feminine", "properNounCase": 1 } },
+            { "search": "doc.", "replace": "docentky", "rightCondition": { "properNounGender": "feminine", "properNounCase": 2 } },
+            { "search": "doc.", "replace": "docentce", "rightCondition": { "properNounGender": "feminine", "properNounCase": 3 } },
+            { "search": "doc.", "replace": "docentce", "rightCondition": { "properNounGender": "feminine", "properNounCase": 36 } },
+            { "search": "doc.", "replace": "docentku", "rightCondition": { "properNounGender": "feminine", "properNounCase": 4 } },
+            { "search": "doc.", "replace": "docentce", "rightCondition": { "properNounGender": "feminine", "properNounCase": 6 } },
+            { "search": "doc.", "replace": "docentkou", "rightCondition": { "properNounGender": "feminine", "properNounCase": 7 } },
+            { "search": "doc.", "replace": "docentkou", "left": ["zast.", "zast.:"], "rightCondition": { "properNounGender": "feminine"}},
+            { "search": "doc.", "replace": "docentky", "data":{"check":true}, "leftCondition": { "caseIndicator": 2}, "rightCondition": { "properNounGender": "feminine"}},
+            { "search": "doc.", "replace": "docentku", "data":{"check":true}, "leftCondition": { "caseIndicator": 4}, "rightCondition": { "properNounGender": "feminine"}},
+            { "search": "doc.", "replace": "docentce", "data":{"check":true}, "leftCondition": { "caseIndicator": 6}, "rightCondition": { "properNounGender": "feminine"}},
+            { "search": "doc.", "replace": "docentkou", "data":{"check":true}, "leftCondition": { "caseIndicator": 7}, "rightCondition": { "properNounGender": "feminine"}},
+            { "search": "doc.", "replace": "docentka", "data":{"check":true}, "rightCondition": { "properNounGender": "feminine"}},
+			{ "search": "doc.", "matchCase": true, "replace": "docent", "data":{"check":true}},	
+			
+			{ "search": "nezl.", "replace": "nezletilý", "rightCondition": { "properNounGender": "masculine", "properNounCase": 1}},
+            { "search": "nezl.", "replace": "nezletilého", "rightCondition": { "properNounGender": "masculine", "properNounCase": 2 } },
+            { "search": "nezl.", "replace": "nezletilého", "rightCondition": { "properNounGender": "masculine", "properNounCase": 24} },
+            { "search": "nezl.", "replace": "nezletilému", "rightCondition": { "properNounGender": "masculine", "properNounCase": 3} },
+            { "search": "nezl.", "replace": "nezletilému", "data":{"check":true}, "rightCondition": { "properNounGender": "masculine", "properNounCase": 36} },
+            { "search": "nezl.", "replace": "nezletilého", "rightCondition": { "properNounGender": "masculine", "properNounCase": 4} },
+            { "search": "nezl.", "replace": "nezletilém", "rightCondition": { "properNounGender": "masculine", "properNounCase": 6} },
+            { "search": "nezl.", "replace": "nezletilým", "rightCondition": { "properNounGender": "masculine", "properNounCase": 7} },
+            { "search": "nezl.", "replace": "nezletilého", "data":{"check":true}, "leftCondition": { "caseIndicator": 2}, "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "nezl.", "replace": "nezletilého", "data":{"check":true}, "leftCondition": { "caseIndicator": 4}, "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "nezl.", "replace": "nezletilém", "data":{"check":true}, "leftCondition": { "caseIndicator": 6}, "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "nezl.", "replace": "nezletilým", "data":{"check":true}, "leftCondition": { "caseIndicator": 7}, "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "nezl.", "replace": "nezletilá", "rightCondition": { "properNounGender": "feminine", "properNounCase": 1 } },
+            { "search": "nezl.", "replace": "nezletilé", "rightCondition": { "properNounGender": "feminine", "properNounCase": 2 } },
+            { "search": "nezl.", "replace": "nezletilé", "rightCondition": { "properNounGender": "feminine", "properNounCase": 3 } },
+            { "search": "nezl.", "replace": "nezletilé", "rightCondition": { "properNounGender": "feminine", "properNounCase": 36 } },
+            { "search": "nezl.", "replace": "nezletilou", "rightCondition": { "properNounGender": "feminine", "properNounCase": 4 } },
+            { "search": "nezl.", "replace": "nezletilé", "rightCondition": { "properNounGender": "feminine", "properNounCase": 6 } },
+            { "search": "nezl.", "replace": "nezletilou", "rightCondition": { "properNounGender": "feminine", "properNounCase": 7 } },
+            { "search": "nezl.", "replace": "nezletilé", "data":{"check":true}, "leftCondition": { "caseIndicator": 2}, "rightCondition": { "properNounGender": "feminine"}},
+            { "search": "nezl.", "replace": "nezletilou", "data":{"check":true}, "leftCondition": { "caseIndicator": 4}, "rightCondition": { "properNounGender": "feminine"}},
+            { "search": "nezl.", "replace": "nezletilé", "data":{"check":true}, "leftCondition": { "caseIndicator": 6}, "rightCondition": { "properNounGender": "feminine"}},
+            { "search": "nezl.", "replace": "nezletilou", "data":{"check":true}, "leftCondition": { "caseIndicator": 7}, "rightCondition": { "properNounGender": "feminine"}},
+            { "search": "nezl.", "replace": "nezletilá", "data":{"check":true}, "rightCondition": { "properNounGender": "feminine"}},
+			{ "search": "nezl.", "matchCase": true, "replace": "nezletilý", "data":{"check":true}},
+			
+			{ "search": "nar.", "replace": "narozený", "leftCondition": { "properNounGender": "masculine", "properNounCase": 1}},
+            { "search": "nar.", "replace": "narozeného", "leftCondition": { "properNounGender": "masculine", "properNounCase": 2 } },
+            { "search": "nar.", "replace": "narozeného", "leftCondition": { "properNounGender": "masculine", "properNounCase": 24} },
+            { "search": "nar.", "replace": "narozenému", "leftCondition": { "properNounGender": "masculine", "properNounCase": 3} },
+            { "search": "nar.", "replace": "narozenému", "data":{"check":true}, "leftCondition": { "properNounGender": "masculine", "properNounCase": 36} },
+            { "search": "nar.", "replace": "narozeného", "leftCondition": { "properNounGender": "masculine", "properNounCase": 4} },
+            { "search": "nar.", "replace": "narozeném", "leftCondition": { "properNounGender": "masculine", "properNounCase": 6} },
+            { "search": "nar.", "replace": "narozeným", "leftCondition": { "properNounGender": "masculine", "properNounCase": 7} },
+            { "search": "nar.", "replace": "narozená", "leftCondition": { "properNounGender": "feminine", "properNounCase": 1 } },
+            { "search": "nar.", "replace": "narozené", "leftCondition": { "properNounGender": "feminine", "properNounCase": 2 } },
+            { "search": "nar.", "replace": "narozené", "leftCondition": { "properNounGender": "feminine", "properNounCase": 3 } },
+            { "search": "nar.", "replace": "narozené", "leftCondition": { "properNounGender": "feminine", "properNounCase": 36 } },
+            { "search": "nar.", "replace": "narozenou", "leftCondition": { "properNounGender": "feminine", "properNounCase": 4 } },
+            { "search": "nar.", "replace": "narozené", "leftCondition": { "properNounGender": "feminine", "properNounCase": 6 } },
+            { "search": "nar.", "replace": "narozenou", "leftCondition": { "properNounGender": "feminine", "properNounCase": 7 } },
+            { "search": "nar.", "replace": "narozená", "data":{"check":true}, "leftCondition": { "properNounGender": "feminine"}},
+			{ "search": "nar.", "matchCase": true, "replace": "narozen", "data":{"check":true}},
+			
+			{ "search": "obž.", "replace": "obžalovaný", "rightCondition": { "properNounGender": "masculine", "properNounCase": 1}},
+            { "search": "obž.", "replace": "obžalovaného", "rightCondition": { "properNounGender": "masculine", "properNounCase": 2 } },
+            { "search": "obž.", "replace": "obžalovaného", "rightCondition": { "properNounGender": "masculine", "properNounCase": 24} },
+            { "search": "obž.", "replace": "obžalovanému", "rightCondition": { "properNounGender": "masculine", "properNounCase": 3} },
+            { "search": "obž.", "replace": "obžalovanému", "data":{"check":true}, "rightCondition": { "properNounGender": "masculine", "properNounCase": 36} },
+            { "search": "obž.", "replace": "obžalovaného", "rightCondition": { "properNounGender": "masculine", "properNounCase": 4} },
+            { "search": "obž.", "replace": "obžalovaném", "rightCondition": { "properNounGender": "masculine", "properNounCase": 6} },
+            { "search": "obž.", "replace": "obžalovaným", "rightCondition": { "properNounGender": "masculine", "properNounCase": 7} },
+            { "search": "obž.", "replace": "obžalovaného", "data":{"check":true}, "leftCondition": { "caseIndicator": 2}, "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "obž.", "replace": "obžalovaného", "data":{"check":true}, "leftCondition": { "caseIndicator": 4}, "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "obž.", "replace": "obžalovaném", "data":{"check":true}, "leftCondition": { "caseIndicator": 6}, "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "obž.", "replace": "obžalovaným", "data":{"check":true}, "leftCondition": { "caseIndicator": 7}, "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "obž.", "replace": "obžalovaná", "rightCondition": { "properNounGender": "feminine", "properNounCase": 1 } },
+            { "search": "obž.", "replace": "obžalované", "rightCondition": { "properNounGender": "feminine", "properNounCase": 2 } },
+            { "search": "obž.", "replace": "obžalované", "rightCondition": { "properNounGender": "feminine", "properNounCase": 3 } },
+            { "search": "obž.", "replace": "obžalované", "rightCondition": { "properNounGender": "feminine", "properNounCase": 36 } },
+            { "search": "obž.", "replace": "obžalovanou", "rightCondition": { "properNounGender": "feminine", "properNounCase": 4 } },
+            { "search": "obž.", "replace": "obžalované", "rightCondition": { "properNounGender": "feminine", "properNounCase": 6 } },
+            { "search": "obž.", "replace": "obžalovanou", "rightCondition": { "properNounGender": "feminine", "properNounCase": 7 } },
+            { "search": "obž.", "replace": "obžalované", "data":{"check":true}, "leftCondition": { "caseIndicator": 2}, "rightCondition": { "properNounGender": "feminine"}},
+            { "search": "obž.", "replace": "obžalovanou", "data":{"check":true}, "leftCondition": { "caseIndicator": 4}, "rightCondition": { "properNounGender": "feminine"}},
+            { "search": "obž.", "replace": "obžalované", "data":{"check":true}, "leftCondition": { "caseIndicator": 6}, "rightCondition": { "properNounGender": "feminine"}},
+            { "search": "obž.", "replace": "obžalovanou", "data":{"check":true}, "leftCondition": { "caseIndicator": 7}, "rightCondition": { "properNounGender": "feminine"}},
+            { "search": "obž.", "replace": "obžalovaná", "data":{"check":true}, "rightCondition": { "properNounGender": "feminine"}},
+			{ "search": "obž.", "matchCase": true, "replace": "obžalovaný", "data":{"check":true}},
+
+            { "search": "p.", "matchCase": true, "replace": "pan", "rightCondition": { "properNounGender": "masculine", "properNounCase": 1}},
+            { "search": "p.", "matchCase": true, "replace": "pana", "rightCondition": { "properNounGender": "masculine", "properNounCase": 2 } },
+            { "search": "p.", "matchCase": true, "replace": "pana", "rightCondition": { "properNounGender": "masculine", "properNounCase": 24} },
+            { "search": "p.", "matchCase": true, "replace": "panu", "rightCondition": { "properNounGender": "masculine", "properNounCase": 3} },
+            { "search": "p.", "matchCase": true, "replace": "panu", "data":{"check":true}, "rightCondition": { "properNounGender": "masculine", "properNounCase": 36} },
+            { "search": "p.", "matchCase": true, "replace": "pana", "rightCondition": { "properNounGender": "masculine", "properNounCase": 4} },
+            { "search": "p.", "matchCase": true, "replace": "panu", "rightCondition": { "properNounGender": "masculine", "properNounCase": 6} },
+            { "search": "p.", "matchCase": true, "replace": "panem", "rightCondition": { "properNounGender": "masculine", "properNounCase": 7} },
+            { "search": "p.", "matchCase": true, "replace": "panem", "left": ["zast.", "zast.:"], "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "p.", "matchCase": true, "replace": "pana", "data":{"check":true}, "leftCondition": { "caseIndicator": 2}, "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "p.", "matchCase": true, "replace": "pana", "data":{"check":true}, "leftCondition": { "caseIndicator": 4}, "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "p.", "matchCase": true, "replace": "panu", "data":{"check":true}, "leftCondition": { "caseIndicator": 6}, "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "p.", "matchCase": true, "replace": "panem", "data":{"check":true}, "leftCondition": { "caseIndicator": 7}, "rightCondition": { "properNounGender": "masculine"}},
+            { "search": "pí", "matchCase": true, "matchCase": true, "replace": "paní", "data":{"check":true}, "rightCondition": { "properNounGender": "feminine"}}
+		]	
+	},
+    {
+		"action": "Rules",
+		"comment": "oznaceni rozepsanych zkratek pred jmeny check:true",
+		"rules": [
+			{"regex": "inženýr\\w*", "data": {"check": true}, "rightCondition": { "partOfSpeech": "properNoun", "notsure": true } },
+            {"regex": "bakalář\\w*", "data": {"check": true}, "rightCondition": { "partOfSpeech": "properNoun", "notsure": true } },
+            {"regex": "magist\\w+", "data": {"check": true}, "rightCondition": { "partOfSpeech": "properNoun", "notsure": true } },
+            {"regex": "docent\\w*", "data": {"check": true}, "rightCondition": { "partOfSpeech": "properNoun", "notsure": true } },           
+            {"regex": "nezletil\\w+", "data": {"check": true}, "rightCondition": { "partOfSpeech": "properNoun", "notsure": true } },
+            {"regex": "narozen\\w*", "data": {"check": true}, "rightCondition": { "partOfSpeech": "properNoun", "notsure": true } },
+            {"regex": "obžalovan\\w+", "data": {"check": true}, "rightCondition": { "partOfSpeech": "properNoun", "notsure": true } },
+            {"regex": "pan\\w*", "data": {"check": true}, "rightCondition": { "partOfSpeech": "properNoun", "notsure": true } }
+		]
+	},	
+	{
+		"action": "Rules",
+		"rules": [		
+            { "search": "VIN", "matchCase": true, "replace": "vin"},
+			{ "search": "RZ", "matchCase": true, "replace": "registrační značkou" , "data":{"check":true}, "left": ["s"]},
+			{ "search": "RZ", "matchCase": true, "replace": "registrační značka" , "data":{"check":true}},
+			{ "search": "mil.", "matchCase": true, "replace": "miliónů" , "data":{"check":true}},
+			{ "search": "příp.", "matchCase": true, "replace": "případně" },
+			{ "search": "v. r.", "matchCase": true, "replace": "vlastní rukou" },
+			{ "search": "RČ", "matchCase": true, "replace": "rodné číslo" },
+			{ "search": "r.č.", "matchCase": true, "replace": "rodné číslo" },
+			{ "search": "r. č.", "matchCase": true, "replace": "rodné číslo" },
+			{ "search": "v.r.", "matchCase": true, "replace": "vlastní rukou." },
+			{ "search": "ul.", "matchCase": true, "replace": "ulice" },
+			{ "search": "ÚS", "matchCase": true, "replace":"ú es"},
+			{ "search": "WC", "matchCase": true, "data":{"spell": true }},
+			{ "search": "DPH", "matchCase": true, "data":{"spell": true }},
+			{ "search": "NSČR", "matchCase": true, "data":{"spell": true }},
+			{ "search": "ČR", "matchCase": true, "replace": "České republiky", "left": ["policie","Policie","policii","Policii", "NS", "soudu", "soud"]},
+			{ "search": "ČR", "matchCase": true, "replace": "Česká republika", "data":{"check":true}},
+			{ "search": "PČR", "matchCase": true, "replace": "Policií České republiky", "left": ["před"]},
+			{ "search": "PČR", "matchCase": true, "replace": "Policie České republiky", "data":{"check":true}},
+			{ "search": "NS", "matchCase": true, "replace": "Nejvyššího soudu", "left": ["rozhodnutí", "rozhodnutím", "Rozhodnutí", "Rozhodnutím", "rozhodnutími"] },
+			{ "search": "NS", "matchCase": true, "replace": "Nejvyšší soud" },
+			{ "search": "MSPH", "matchCase": true, "data":{"spell": true }},
+			{ "search": "VSPH", "matchCase": true, "data":{"spell": true }},
+			{ "search": "cca", "matchCase": true, "data":{"spell": true }},
+			{ "search": "cca.", "matchCase": true, "replace": "cca", "data":{"spell": true }},
+			{ "search": "IČ", "matchCase": true, "replace": "identifikačním číslem", "left": "pod"},
+			{ "search": "IČ:", "matchCase": true, "wholeWord": false, "replace": "identifikační číslo"},
+			{ "search": "IČO:", "matchCase": true, "wholeWord": false, "replace": "identifikační číslo"},
+			{ "search": "IČ", "matchCase": true, "replace": "identifikační číslo"},
+			{ "search": "IČO", "matchCase": true, "replace": "identifikační číslo"},
+			{ "search": "trvale bytem", "matchCase": true, "replace": "trvale bytem," },
+			{ "search": "JUDr.", "matchCase": true, "replace": "judr"},
+			{ "search": "MUDr.", "matchCase": true, "replace": "mudr"},
+			{ "search": "Ph.D.", "matchCase": true, "replace": "pý ejč dý."},
+			{ "search": "CSc.","matchCase": true, "replace": "csc.", "data":{"spell":true}, "insertBefore": { "type": "phraseBreak" }},
+			{ "search": "č. j.", "matchCase": true, "replace": "číslem jednacím", "left": ["pod"] },
+			{ "search": "č.j.", "matchCase": true, "replace": "číslem jednacím", "left": ["pod"] },
+			{ "search": "čj.", "matchCase": true, "replace": "číslem jednacím", "left": ["pod"] },
+			{ "search": "Čj.", "matchCase": true, "replace": "číslem jednacím", "left": ["pod"] },
+			{ "search": "č. j.", "matchCase": true, "replace": "číslo jednací", "insertBefore": { "type": "phraseBreak" }},
+			{ "search": "č.j.", "matchCase": true, "replace": "číslo jednací","insertBefore": { "type": "phraseBreak" } },
+			{ "search": "čj.", "matchCase": true, "replace": "číslo jednací","insertBefore": { "type": "phraseBreak" } },
+			{ "search": "Čj.", "matchCase": true, "replace": "číslo jednací","insertBefore": { "type": "phraseBreak" } },
+			{ "search": "PSČ", "matchCase": true, "replace": "poštovní směrovací číslo", "insertBefore": { "type": "phraseBreak" }},
+			{ "search": "LV", "matchCase": true, "replace": "listu vlastnictví", "left": ["na","v","dle","podle"]},
+			{ "search": "LV", "matchCase": true, "replace": "list vlastnictví"},
+			{ "search": "vyhl.", "matchCase": true, "replace": "vyhlášky", "left":["dle", "podle", "z"]},
+            { "search": "vyhl.", "matchCase": true, "replace": "vyhláška", "left":["jen"]},
+			{ "search": "vyhl.", "matchCase": true, "replace": "vyhlášky", "leftCondition": {"type": "number"}},
+			{ "search": "vyhl.", "matchCase": true, "replace": "vyhláška", "data":{"check":true}},
+			{ "search": "reg. zn.", "matchCase": true, "replace": "registrační značka", "data":{"check":true}},
+			{ "search": "sen. zn.", "matchCase": false, "replace": "senátní značkou", "left": ["pod"]},
+			{ "search": "sen. zn.", "matchCase": true, "replace": "senátní značka"},
+			{ "search": "sp. zn.", "matchCase": false, "replace": "spisovou značkou", "left": ["pod"]},
+			{ "search": "sp. zn.", "matchCase": true, "replace": "spisová značka"},
+			{ "search": "spis. zn.", "matchCase": false, "replace": "spisovou značkou", "left": ["pod"]},
+			{ "search": "spis. zn.", "matchCase": true, "replace": "spisová značka"},
+			{ "search": "sp.zn.", "matchCase": false, "replace": "spisovou značkou", "left": ["pod"]},
+			{ "search": "sp.zn.", "matchCase": true, "replace": "spisová značka"},
+			{ "search": "č. l.", "wholeWord": false, "matchCase": true, "replace": "číslo listu"},
+			{ "search": "č.l.", "wholeWord": false, "matchCase": true, "replace": "číslo listu"},
+			{ "search": "a kol.", "matchCase": true, "replace": "a kolektiv."},
+			{ "search": "obč. zák.", "matchCase": true, "replace": "občanského zákoníku", "leftCondition": {"type": "number"}, "insertBefore": { "type": "phraseBreak" }},
+			{ "search": "obč. zák.", "matchCase": true, "replace": "občanský zákoník", "data":{"check":true}, "insertBefore": { "type": "phraseBreak" }},
+			{ "search": "obč.", "matchCase": true, "replace": "občanského", "right": "zákoníku", "insertBefore": { "type": "phraseBreak" }},
+			{ "search": "obč.", "matchCase": true, "replace": "občanský", "right": "zákoník", "insertBefore": { "type": "phraseBreak" }},
+			{ "search": "Sb. rozh. civ.", "matchCase": true, "replace": "sbírky rozhodnutí civilních."},
+			{ "search": "sb.", "matchCase": false, "replace": "sbírky."},
+			{ "search": "§", "matchCase": false, "replace": "paragrafu", "left": ["z", "dle", "podle", "ustanovení", "ustanovením", "ustanoveními", "ve smyslu", "znění", "ust."]},
+			{ "search": "§", "matchCase": true, "replace": "paragrafu", "left": ["k","v"]},
+			{ "search": "§", "matchCase": true, "replace": "paragrafem", "left": ["s","odůvodnil"]},
+			{ "search": "§", "matchCase": true, "replace": "paragraf"},
+			{ "search": "%", "wholeword":false, "data":{"spell": true, "check":true}},
+			{ "search": "+", "wholeword":false, "data":{"spell": true}},
+			{ "search": "čp/če", "matchCase": true, "replace": "číslem popisným lomeno číslem evidenčním", "left": ["pod"]},
+			{ "search": "čp/če", "matchCase": true, "replace": "čísla popisného lomeno čísla evidenčního", "left": ["bez"]},
+			{ "search": "čp/če", "matchCase": true, "replace": "číslo popisné lomeno číslo evidenční", "data":{"check":true}},
+			{ "search": "čp.", "matchCase": true, "replace": "číslem popisným", "left": ["pod"]},
+			{ "search": "čp.", "matchCase": true, "replace": "číslo popisné"},
+			{ "search": "č.p.", "matchCase": true, "replace": "číslem popisným", "left": ["pod"]},
+			{ "search": "č.p.", "matchCase": true, "replace": "číslo popisné"},
+			{ "search": "č. p.", "matchCase": true, "replace": "číslem popisným", "left": ["pod"]},
+			{ "search": "č. p.", "matchCase": true, "replace": "číslo popisné"},
+			{ "search": "č.e.", "matchCase": true, "replace": "číslem evidenčním", "left": ["pod"]},
+			{ "search": "č.e.", "matchCase": true, "replace": "číslo evidenční"},
+			{ "search": "č. e.", "matchCase": true, "replace": "číslem evidenčním", "left": ["pod"]},
+			{ "search": "č. e.", "matchCase": true, "replace": "číslo evidenční"},
+			{ "search": "st.", "matchCase": true, "replace": "stavby", "left": ["pozemku"]},
+			{ "search": "st. p. č.", "matchCase": true, "replace": "stavebním parcelním číslem", "left": ["pod"]},
+			{ "search": "st. p. č.", "matchCase": true, "replace": "stavební parcelní číslo"},
+			{ "search": "st.p.č.", "matchCase": true, "replace": "stavebním parcelním číslem", "left": ["pod"]},
+			{ "search": "st.p.č.", "matchCase": true, "replace": "stavební parcelní číslo"},
+			{ "search": "p. p. č.", "matchCase": true, "replace": "pozemková parcela číslo", "data":{"check":true}},
+			{ "search": "p.p.č.", "matchCase": true, "replace": "pozemková parcela číslo", "data":{"check":true}},
+            { "search": "p. č.", "matchCase": true, "replace": "parcelní číslo", "data":{"check":true}},            
+            { "search": "p.č.", "matchCase": true, "replace": "parcelní číslo", "data":{"check":true}},
+			{ "search": "parc. č.", "matchCase": true, "replace": "parcelním číslem","left": ["s"], "wholeWord":false},
+			{ "search": "parc.č.", "matchCase": true, "replace": "parcelním číslem", "left": ["s"], "wholeWord":false},
+			{ "search": "parc. č.", "matchCase": true, "replace": "parfelní číslo","left": "@start"},
+			{ "search": "parc.č.", "matchCase": true, "replace": "parcelní číslo", "left": "@start"},
+			{ "search": "parc. č.", "matchCase": true, "replace": "parcelní číslo","left": [",", "zahradu", "pozemek", "pozemku", "zahrada"]},
+			{ "search": "parc.č.", "matchCase": true, "replace": "parcelní číslo", "left": [",", "zahradu", "pozemek", "pozemku", "zahrada"]},
+			{ "search": "parc. č.", "matchCase": true, "replace": "parcelní číslo", "data":{"check":true}},
+			{ "search": "parc.č.", "matchCase": true, "replace": "parcelní číslo", "data":{"check":true}},
+			{ "search": "k. ú.", "matchCase": true, "replace": "katastrálním území", "left": ["v"]},
+			{ "search": "k.ú.", "matchCase": true, "replace": "katastrálním území", "left": ["v"]},
+			{ "search": "k. ú.", "matchCase": true, "replace": "katastrální území", "data":{"check":true}},
+			{ "search": "k.ú.", "matchCase": true, "replace": "katastrální území", "data":{"check":true}},
+			{ "search": "č. st.", "matchCase": true, "replace": "číslo stavby"},
+			{ "search": "st.", "matchCase": true, "data":{"spell":true}, "rightCondition": {"type": "number"}},
+			{ "search": "ev.", "matchCase": true, "replace": "evidenční", "right": ["č.", "číslo"]},
+			{ "search": "č.", "matchCase": true, "replace": "číslem", "left": ["pod"]},
+			{ "search": "č.", "matchCase": true, "replace": "číslo"},
+			{ "search": "ev.", "matchCase": true, "replace": "eventuálně"},
+			{ "search": "event.", "matchCase": true, "replace": "eventuálně"},
+			{ "search": "popř.", "matchCase": true, "replace": "popřípadě"},
+			{ "search": "pozn.", "matchCase": true, "replace": "poznámka"},
+			{ "search": "SbNU", "matchCase": true, "replace": "sbírky nálezů a usnesení"},
+			{ "search": "aj.",  "matchCase": true, "replace": "a jiné."},
+			{ "search": "odst.", "matchCase": true, "replace": "odstavce", "left": ["podle","dle","ve smyslu","Podle","Dle","Ve smyslu"], "insertBefore": { "type": "phraseBreak" }},
+			{ "search": "odst.", "matchCase": true, "replace": "odstavci", "left": ["v","k","V","K"]},
+			{ "search": "odst.", "matchCase": true, "replace": "odstavce", "leftCondition": {"type": "number"}, "insertBefore": { "type": "phraseBreak" }},
+			{ "search": "odst.", "matchCase": true, "replace": "odstavec", "insertBefore": { "type": "phraseBreak" }},
+			{ "search": "odst.", "wholeWord": false, "matchCase": true, "replace": "odstavce ", "left": ["podle","dle","ve smyslu","Podle","Dle","Ve smyslu"]},
+			{ "search": "odst.", "wholeWord": false, "matchCase": true, "replace": "odstavci ", "left": ["v","k","V","K"]},
+			{ "search": "odst.", "wholeWord": false, "matchCase": true, "replace": "odstavce ", "leftCondition": {"type": "number"}, "insertBefore": { "type": "phraseBreak" }},
+			{ "search": "odst.", "wholeWord": false, "matchCase": true, "replace": "odstavec ", "insertBefore": { "type": "phraseBreak" }},
+			{ "search": "písm.", "matchCase": true, "replace": "písmeno"},
+			{ "search": "tr.", "matchCase": true, "replace": "trestního", "right": ["zákoníku","zákona"]},
+			{ "search": "tr.", "matchCase": true, "replace": "trestní", "right": ["zákoník","zákon"]},
+			{ "search": "ÚS", "matchCase": true, "data": {"spell": true}},
+			{ "search": "přísl.", "matchCase": true, "replace": "příslušenstvím", "left": "s"},		
+			{ "search": "tr. ř.", "matchCase": true, "replace": "trestním řádu.", "left": "v"},
+			{ "search": "tr. ř.", "matchCase": true, "replace": "trestního řádu"},
+			{ "search": "tr.ř.", "matchCase": true, "replace": "trestním řádu.", "left": "v"},
+			{ "search": "tr.ř.", "matchCase": true, "replace": "trestního řádu."},
+			{ "search": "čl.", "matchCase": true, "replace": "článku", "left": ["v","V","dle","podle","Dle","Podle", "z", "Z"]},
+            { "search": "čl.", "matchCase": true, "replace": "článkem", "left": ["s", "S"]},
+			{ "search": "čl.", "matchCase": true, "replace": "článek", "left": ["na", "("]},
+			{ "search": "čl.", "matchCase": true, "replace": "článek", "data": {"check": true}},
+            { "search": "atd.", "matchCase": true, "replace": "a tak dále."},			
+            { "search": "z. ř. s.", "matchCase": true, "replace": "zákona o zvláštních řízeních soudních."},
+			{ "search": "o. s. ř.", "matchCase": true, "replace": "občanského soudního řádu."},
+			{ "search": "o.s.ř.", "matchCase": true, "replace": "občanského soudního řádu."},
+            { "search": "o. z.", "matchCase": true, "replace": "občanského zákoníku.", "leftCondition": {"type": "number"}},
+			{ "search": "o. z.", "matchCase": true, "replace": "občanského zákoníku.", "data":{"check":true}},
+            { "search": "o. z.", "matchCase": true, "replace": "občanský zákoník", "left":["dále", "jen"]},
+            { "search": "o.z.", "matchCase": true, "replace": "občanský zákoník", "left":["dále", "jen"]},
+            { "search": "o.z.", "matchCase": true, "replace": "občanského zákoníku.", "leftCondition": {"type": "number"}},
+			{ "search": "o.z.", "matchCase": true, "replace": "občanského zákoníku.", "data":{"check":true}},
+			{ "search": "an.", "matchCase": true, "replace": "a následujících.", "data":{"check":true}},
+			{ "search": "ml.", "matchCase": true, "replace": "mladší", "data":{"check":true}},
+			{ "search": "tj.", "matchCase": true, "replace": "to jest"},
+			{ "search": "zjm.", "matchCase": true, "replace": "zejména"},
+			{ "search": "resp.", "matchCase": true, "replace": "respektive"},
+			{ "search": "srov.", "matchCase": true, "replace": "srovnej"},
+			{ "search": "např.", "matchCase": true, "replace": "například"},
+			{ "search": "tzv.", "matchCase": true, "replace": "tak zvaný", "data":{"check":true}},
+			{ "search": "tzn.", "matchCase": true, "replace": "to znamená"},
+			{ "search": "vlád. nař.", "matchCase": true, "replace": "vládního nařízení", "leftCondition": {"type": "number"}},
+			{ "search": "vlád. nař.", "matchCase": true, "replace": "vládní nařízení", "data": {"check": true}},
+			{ "search": "vl. nař.", "matchCase": true, "replace": "vládního nařízení", "leftCondition": {"type": "number"}},
+			{ "search": "vl. nař.", "matchCase": true, "replace": "vládní nařízení", "data": {"check": true}},
+			{ "search": "obch. zák.", "matchCase": true, "replace": "obchodního zákoníku.", "leftCondition": {"type": "number"}},
+			{ "search": "obch. zák.", "matchCase": true, "replace": "obchodní zákoník.", "data": {"check": true}},
+			{ "search": "tr. zákoníku", "matchCase": true, "replace": "trestního zákoníku"},
+			{ "search": "tr.zákoníku", "matchCase": true, "replace": "trestního zákoníku"},
+			{ "search": "tr.zák.", "matchCase": true, "replace": "trestního zákoníku.", "leftCondition": {"type": "number"}},
+			{ "search": "tr. zák.", "matchCase": true, "replace": "trestního zákoníku.", "leftCondition": {"type": "number"}},
+			{ "search": "cit. zák.", "matchCase": true, "replace": "citovaného zákona", "leftCondition": {"type": "number"}},
+			{ "search": "cit. z.", "matchCase": true, "replace": "citovaného zákona", "leftCondition": {"type": "number"}},
+			{ "search": "cit.", "matchCase": true, "replace": "citované", "right": "vyhlášky"},
+			{ "search": "cit.", "matchCase": true, "replace": "citovaného", "right": "zákona"},
+			{ "search": "cit", "matchCase": true, "replace": "citovaný", "data":{"check":true}},
+			{ "search": "zák.", "matchCase": true, "replace": "zákona", "leftCondition": {"type": "number"}},
+			{ "search": "Zák.", "matchCase": true, "replace": "zákona", "leftCondition": {"type": "number"}},
+			{ "search": "zák.", "matchCase": true, "replace": "zákona", "left": ["ze", "dle", "podle", "ve smyslu", "znění"]},
+			{ "search": "zák.", "matchCase": true, "replace": "zákon"},
+			{ "search": "tr. ř.", "matchCase": true, "replace": "trestního řádu", "leftCondition": {"type": "number"}},
+			{ "search": "tr.", "matchCase": true, "replace": "trestního", "right":["řádu"]},
+			{ "search": "spol. s r.o.", "matchCase": true, "replace": "společnost s ručením omezeným"},
+			{ "search": "s. r. o.", "matchCase": true, "replace": "společnost s ručením omezeným."},
+			{ "search": "s.r.o.", "matchCase": true, "replace": "společnost s ručením omezeným."},
+			{ "search": "a. s.", "matchCase": true, "replace": "akciová společnost."},
+			{ "search": "a.s.", "matchCase": true, "replace": "akciová společnost."},
+			{ "search": "ust.", "matchCase": true, "replace": "ustanovením", "left": "s"},
+			{ "search": "ust.", "matchCase": true, "replace": "ustanovení"},
+			{ "search": "p.a.", "matchCase": true, "replace": "per annum."},
+			{ "search": "obv.", "matchCase": true, "replace": "obviněný", "data":{"check":true}},
+			{ "search": "zast.", "matchCase": true, "replace": "zastoupený", "data":{"check":true}},
+            { "search": "l/100km", "matchCase": true, "replace": "litrů na sto kilometrů", "data":{"check":true}, "leftCondition": {"type": "number"}},
+            { "search": "l", "matchCase": true, "replace": "litrů", "data":{"check":true}, "leftCondition": {"type": "number"}},			
+            { "search": "cm", "matchCase": true, "replace": "centimetrů", "data":{"check":true}, "leftCondition": {"type": "number"}},
+			{ "search": "m", "matchCase": true, "replace": "metrů", "data":{"check":true}, "leftCondition": {"type": "number"}},
+			{ "search": "km", "matchCase": true, "replace": "kilometrů", "data":{"check":true}, "leftCondition": {"type": "number"}},
+			{ "search": "m2", "matchCase": true, "replace": "metrů čtverečních", "data":{"check":true}, "leftCondition": {"type": "number"}},
+			{ "search": "m3", "matchCase": true, "replace": "metrů krychlových", "data":{"check":true}, "leftCondition": {"type": "number"}},
+			{ "search": "kg", "matchCase": true, "replace": "kilogramů", "data":{"check":true}, "leftCondition": {"type": "number"}},
+			{ "search": "1/2", "matchCase": true, "replace": "jedna polovina", "data":{"check":true}},
+			{ "search": "v SJM", "matchCase": true, "replace": "ve společném jmění manželů"},
+			{ "search": "SJM", "matchCase": true, "replace": "společném jmění manželů", "left": ["v","ve"]},
+			{ "search": "SJM", "matchCase": true, "replace": "společného jmění manželů", "left": ["do", "v rámci", "vypořádání"]},
+			{ "search": "SJM", "matchCase": true, "replace": "společné jmění manželů", "data":{"check":true}},
+			{ "search": "BSM", "matchCase": true, "replace": "bezpodílovém spoluvlastnictví manželů", "left": ["v","ve"]},
+			{ "search": "BSM", "matchCase": true, "replace": "bezpodílového spoluvlastnictví manželů", "left": ["do", "podle", "dle", "vypořádání"]},
+			{ "search": "BSM", "matchCase": true, "replace": "bezpodílové vlastnictví manželů", "data":{"check":true}},
+			{ "search": "v r.", "matchCase": false, "replace": "v roce", "rightCondition": {"type": "number"}},
+            { "search": "od r.", "matchCase": false, "replace": "od roku", "rightCondition": {"type": "number"}},
+            { "search": "do r.", "matchCase": false, "replace": "do roku", "rightCondition": {"type": "number"}},
+			{ "search": "apod.", "matchCase": true, "replace": "a podobně."},
+			{ "search": "mj.", "matchCase": true, "replace": "mimo jiné"},
+			{ "search": "n. L.", "matchCase": true, "replace": "nad Labem."},
+			{ "search": "MěÚ", "matchCase": true, "replace": "městský úřad", "data":{"check":true}},
+			{ "search": "MÚ", "matchCase": true, "replace": "městský úřad", "data":{"check":true}},
+			{ "search": "=", "matchCase": true, "wholeWord": false, "data":{"spell":true}},
+			{ "search": "+", "matchCase": true, "wholeWord": false, "data":{"spell":true}},
+			{ "search": "zejm.", "matchCase": true, "replace": "zejména"},
+			{ "search": "nám.", "matchCase": true, "replace": "náměstí"}
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "cizí slova z rozsudků",
+		"rules": [		
+			{ "search": "clausula", "matchCase": true, "replace": "klauzula" },
+			{ "search": "stantybu", "matchCase": true, "replace": "stantybus" },
+			{ "search": "petit", "matchCase": true, "replace": "petyt" },
+			{ "search": "p. a.", "matchCase": true, "replace": "per anum" },
+			{ "search": "p.a.", "matchCase": true, "replace": "per anum" },
+			{ "search": "p.v.", "matchCase": true, "replace": "pagina versa" }
+		]
+	},
+    {
+		"action": "BreakNewlines",
+		"comment": "frázování - odřádkování",
+		"sentenceThreshold": 1,
+		"paragraphThreshold": 2
+	},
+    {
+		"action": "Rules",
+		"comment": "body; např. [1], 2), 3/ apod.",
+		"rules": [
+			{ "search": "I.", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Bod římská jedna" , "data":{"check":true}, "insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "II.", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Bod římská dva" ,"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "III.", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Bod římská tři" ,"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "IV.", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Bod římská čtyři" ,"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "V.", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Bod římská pět" ,  "data":{"check":true}, "insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "VI.", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Bod římská šest" ,"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "VII.", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Bod římská sedm" ,"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "VIII.", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Bod římská osm" ,"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "IX.", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Bod římská devět" ,"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "X.", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Bod římská deset" , "data":{"check":true},"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "1.", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Zaprvé" ,"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "2.", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Zadruhé" ,"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "3.", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Zatřetí" ,"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "4.", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Začtvrté" ,"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "5.", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Zapáté" ,"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "6.", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Zašesté" ,"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "7.", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Zasedmé" ,"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "8.", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Zaosmé" ,"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "9.", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Zadeváté" ,"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "10.", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Zadesáté" ,"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "1)", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Zaprvé" ,"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "2)", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Zadruhé" ,"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "3)", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Zatřetí" ,"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "4)", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Začtvrté" ,"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "5)", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Zapáté" ,"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "6)", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Zašesté" ,"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "7)", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Zasedmé" ,"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "8)", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Zaosmé" ,"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "9)", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Zadeváté" ,"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "10)", "wholeWord": false, "matchCase": true, "left": "@start", "replace": "Zadesáté" ,"insertAfter": { "type": "sentenceBreak" }},
+			{ "regex": "([1-9]{1})\\)", "replace": "$1","leftCondition": {"type": "sentenceBreak"}, "insertAfter": { "type": "sentenceBreak" }},
+			{ "regex": "(\\[)([1-9]{1})(\\])", "replace": "$2", "leftCondition": {"type": "sentenceBreak"}, "insertAfter": { "type": "sentenceBreak" }},
+			{ "regex": "([1-9]{1})(\\/)", "replace": "$1", "leftCondition": {"type": "sentenceBreak"}, "insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "I.", "matchCase": true, "wholeWord":true, "replace": "římská jedna","leftCondition": {"type": "sentenceBreak"},"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "II.", "matchCase": true, "wholeWord":true, "replace": "římská dva","leftCondition": {"type": "sentenceBreak"},"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "III.", "matchCase": true, "wholeWord":true, "replace": "římská tři","leftCondition": {"type": "sentenceBreak"},"insertAfter": { "type": "sentenceBreak" } },
+			{ "search": "IV.", "matchCase": true, "wholeWord":true, "replace": "římská čtyři","leftCondition": {"type": "sentenceBreak"},"insertAfter": { "type": "sentenceBreak" } },
+			{ "search": "V.", "matchCase": true, "wholeWord":true, "replace": "římská pět","leftCondition": {"type": "sentenceBreak"},"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "VI.", "matchCase": true, "wholeWord":true, "replace": "římská šest","leftCondition": {"type": "sentenceBreak"},"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "VII.", "matchCase": true, "wholeWord":true, "replace": "římská sedm","leftCondition": {"type": "sentenceBreak"},"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "VIII.", "matchCase": true, "wholeWord":true, "replace": "římská osm","leftCondition": {"type": "sentenceBreak"},"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "IX.", "matchCase": true, "wholeWord":true, "replace": "římská devět","leftCondition": {"type": "sentenceBreak"},"insertAfter": { "type": "sentenceBreak" }},
+			{ "search": "I", "matchCase": true, "wholeWord":true, "replace": "římská jedna", "left": ["bod", "bodě", "čl.", "článek", "článku", "výroku", "výrocích", "výrok", "výroky"]},
+			{ "search": "II", "matchCase": true, "wholeWord":true, "replace": "římská dva","left": ["bod", "bodě", "čl.", "článek", "článku", "výroku", "výrocích", "výrok", "výroky"]},
+			{ "search": "III", "matchCase": true, "wholeWord":true, "replace": "římská tři","left": ["bod", "bodě", "čl.", "článek", "článku", "výroku", "výrocích", "výrok", "výroky"]},
+			{ "search": "IV", "matchCase": true, "wholeWord":true, "replace": "římská čtyři","left": ["bod", "bodě", "čl.", "článek", "článku", "výroku", "výrocích", "výrok", "výroky"] },
+			{ "search": "V", "matchCase": true, "wholeWord":true, "replace": "římská pět","left": ["bod", "bodě", "čl.", "článek", "článku", "výroku", "výrocích", "výrok", "výroky"]},
+			{ "search": "VI", "matchCase": true, "wholeWord":true, "replace": "římská šest","left": ["bod", "bodě", "čl.", "článek", "článku", "výroku", "výrocích", "výrok", "výroky"]},
+			{ "search": "VII", "matchCase": true, "wholeWord":true, "replace": "římská sedm","left": ["bod", "bodě", "čl.", "článek", "článku", "výroku", "výrocích", "výrok", "výroky"]},
+			{ "search": "VIII", "matchCase": true, "wholeWord":true, "replace": "římská osm","left": ["bod", "bodě", "čl.", "článek", "článku", "výroku", "výrocích", "výrok", "výroky"]},
+			{ "search": "IX", "matchCase": true, "wholeWord":true, "replace": "římská devět","left": ["bod", "bodě", "čl.", "článek", "článku", "výroku", "výrocích", "výrok", "výroky"]}
+		]
+	},
+	{
+		"action": "Rules",
+		"rules": [
+			{ "regex": "(s\\.) (\\d+ až \\d+)", "replace": "strany $2", "wholeWord": true },
+			{ "regex": "(s\\.) (\\d+)", "replace": "strana $2", "wholeWord": true },
+			{ "regex": "(str\\.) (\\d+ až \\d+)", "replace": "strany $2", "wholeWord": true },
+			{ "regex": "(str\\.) (\\d+)", "replace": "strana $2", "wholeWord": true }
+		]
+	},	
+	{
+		"action": "Rules",
+		"rules": [
+			{ "firstCharHint": "d", "regex": "(\\d+)/(\\d+)", "replace": "$1 lomeno $2", "wholeWord": true },
+			{ "regex": "([a-záéíěóůúýčřžšťďň]+)/([a-záéíěóůúýčřžšťďň]+)", "replace": "$1 lomeno $2", "wholeWord": true }
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "čísla faktur apod. číst po jedné číslici + hodně dlouhá čísla",
+		"rules": [
+			{ "firstCharHint": "d", "regex": "(\\d{5,30})", "wholeWord": true, "data": {"spell": true }, "left": ["číslo", "číslem"]},
+			{ "firstCharHint": "d", "regex": "(\\d{14,30})", "wholeWord": true, "data": {"spell": true }}
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "Spelování samostatných souhlásek (kromě jednopísmenných předložek)",
+		"rules": [
+		    {"regex": "([bcdfghjlmnpqrtwx])", "data": {"spell": true, "check": true }}
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "písmeno, např. 'písmeno a), písmeno b/'",
+		"rules": [
+            { "regex": "([a-z])([\\)\\/]) až ([a-z])([\\)\\/]),", "replace": "$1 až $3",  "data": {"spell": true }, "left": ["písmenech", "písmeno", "až", "písmena", "písm."], "insertAfter": { "type": "phraseBreak" } },
+            { "regex": "([a-z])([\\)\\/]),", "replace": "$1",  "data": {"spell": true }, "left": ["písmenech", "písmeno", "až", "písmena", "písm."], "insertAfter": { "type": "phraseBreak" } },
+			{ "regex": "([a-z])([\\)\\/])", "replace": "$1",  "data": {"spell": true }, "left": ["písmenech", "písmeno", "až", "písmena", "písm."]},
+			{ "regex": "([a-z])[\\)\\/]", "replace": "$1", "wholeWord":true, "data": {"spell": true }, "insertBefore": {"type":"text", "text":"za"}}
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "cena v Kč",
+		"rules": [
+			{ "firstCharHint": "d", "regex": "[1](,-)?( )?Kč", "replace": "jedna koruna",  "matchCase": true},
+			{ "firstCharHint": "d", "regex": "([234])(,-)?( )?Kč", "replace": "$1 koruny",  "matchCase": true},
+			{ "regex": "po (\\d{1,3})[\\. ]?(\\d{3})(,--)( )?Kč", "replace": "po $1$2 korunách",  "matchCase": true, "data": {"case": 6}},
+			{ "regex": "po (\\d{1,3})[\\. ]?(\\d{3}) ?(?:,-)?Kč", "replace": "po $1$2 korunách",  "matchCase": true, "data": {"case": 6}},
+			{ "regex": "po (\\d{1,3})[\\. ]?(\\d{3}) ?(?:,-)? Kč", "replace": "po $1$2 korunách",  "matchCase": true, "data": {"case": 6}},
+			{ "firstCharHint": "d", "regex": "(\\d{1,3})[\\. ]?(\\d{3})(,--)( )?Kč", "replace": "$1$2 korun",  "matchCase": true},
+			{ "firstCharHint": "d", "regex": "(\\d{1,3})[\\. ]?(\\d{3}) ?(?:,-)?Kč", "replace": "$1$2 korun",  "matchCase": true},
+			{ "firstCharHint": "d", "regex": "(\\d{1,3})[\\. ]?(\\d{3}) ?(?:,-)? Kč", "replace": "$1$2 korun",  "matchCase": true},
+			{ "firstCharHint": "d", "regex": "(\\d{1,3})[\\. ]?(\\d{3}),(\\d{2}) ?(?:,-)? ?Kč", "replace": "$1$2 korun $3 haléřů",  "matchCase": true},
+			{ "regex": "po (\\d{1,3}) Kč", "replace": "po $1 korunách",  "matchCase": true, "data": {"case": 6, "check": true}},
+			{ "firstCharHint": "d", "regex": "(\\d{1,3}) Kč", "replace": "$1 korun",  "matchCase": true},
+			{ "search": "Kč", "replace": "korun",  "matchCase": true}
+		]
+	},
+    {
+		"action": "Rules",
+		"comment": "rozsah",
+		"rules": [
+			{ "firstCharHint": "d", "regex": "(\\d+) ?[-––] ?(\\d+)", "replace": "$1 až $2"},
+            { "firstCharHint": "d", "regex": "(\\d+) ?[-––] ?(\\d+)", "replace": "$1 až $2", "right": ["let"]}
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "záporné číslo",
+		"rules": [
+			{ "search": "-", "rightCondition": {"type": "number"}, "wholeWord": false, "replace": "mínus " }
+		]
+	},
+    {
+		"action": "Rules",
+		"comment": "ks",
+		"rules": [
+			{ "search": "1 ks", "matchCase": true, "replace": "jeden kus" },
+			{ "search": "2 ks", "matchCase": true, "replace": "dva kusy" },
+			{ "search": "3 ks.", "matchCase": true, "replace": "tři kusy" }
+		]
+	},
+    {
+		"action": "Rules",
+		"comment": "římská čísla",
+		"TODO": "třeba domyslet...",
+		"rules": [
+			{ "search": "i.", "matchCase": true, "replace": "římská jedna" },
+			{ "search": "ii.", "matchCase": true, "replace": "římská dva" },
+			{ "search": "iii.", "matchCase": true, "replace": "římská tři" },
+			{ "search": "iv.", "matchCase": true, "replace": "římská čtyři" },
+			{ "search": "I.", "matchCase": true, "wholeWord":true, "replace": "římská jedna","left": ["výrok","výrokem", "ad", "ad."]},
+			{ "search": "II.", "matchCase": true, "replace": "římská dva" },
+			{ "search": "III.", "matchCase": true, "replace": "římská tři" },
+			{ "search": "IV.", "matchCase": true, "replace": "římská čtyři" },
+			{ "search": "V.", "matchCase": true, "wholeWord":true, "replace": "římská pět","left": ["výrok"]},
+			{ "search": "I", "matchCase": true, "wholeWord":true, "replace": "římská jedna","left": ["výrok","výrokem","Výrok","Výrokem", "výroku", "Výroku", "ad", "ad."]},
+			{ "search": "II", "matchCase": true, "replace": "římská dva", "left": ["výrok","výrokem","Výrok","Výrokem", "výroku", "Výroku", "ad", "ad."] },
+			{ "search": "III", "matchCase": true, "replace": "římská tři", "left": ["výrok","výrokem","Výrok","Výrokem", "výroku", "Výroku", "ad", "ad."] },
+			{ "search": "IV", "matchCase": true, "replace": "římská čtyři", "left": ["výrok","výrokem","Výrok","Výrokem", "výroku", "Výroku", "ad", "ad."] },
+			{ "search": "V", "matchCase": true, "wholeWord":true, "replace": "římská pět","left": ["výrok","výrokem","Výrok","Výrokem", "výroku", "Výroku", "ad", "ad."]}
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "iniciála",
+		"rules": [	
+			{ "regex": "([A-Z]|Á|É|Í|Ó|Ů|Ú|Ý|Ě|Ž|Š|Č|Ř|Ď|Ť|Ň)(\\.)([A-Z]|Á|É|Í|Ó|Ů|Ú|Ý|Ě|Ž|Š|Č|Ř|Ď|Ť|Ň)(\\.)", "replace": "$1$3",  "matchCase": true, "data": {"spell": true }},
+			{ "regex": "([A-Z]|Á|É|Í|Ó|Ů|Ú|Ý|Ě|Ž|Š|Č|Ř|Ď|Ť|Ň)(\\.)", "replace": "$1",  "matchCase": true, "data": {"spell": true }},
+			{ "active": false, "regex": "([A-Z]|Á|É|Í|Ó|Ů|Ú|Ý|Ě|Ž|Š|Č|Ř|Ď|Ť|Ň)", "replace": "$1",  "wholeWord":true, "matchCase": true, "data": {"spell": true }, "leftCondition": {"type": "text"}, "rightCondition": {"type": "text"}}
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "hláskování",
+		"rules": [	
+			{ "regex": "([a-z]|á|é|í|ó|ů|ú|ý|ě|ž|š|č|ř|ď|ť|ň)(\\.) ([a-z]|á|é|í|ó|ů|ú|ý|ě|ž|š|č|ř|ď|ť|ň)(\\.)", "replace": "$1$3",  "matchCase": true, "data": {"spell": true }},
+			{ "regex": "([a-z]|á|é|í|ó|ů|ú|ý|ě|ž|š|č|ř|ď|ť|ň)(\\.)([a-z]|á|é|í|ó|ů|ú|ý|ě|ž|š|č|ř|ď|ť|ň)(\\.)", "replace": "$1$3",  "matchCase": true, "data": {"spell": true }}
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "hláskování skupin velkých písmen",
+		"rules": [
+			{ "regex": "([A-Z]{2,10})", "matchCase": true, "wholeWord": true, "data": {"spell": true }}
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "desetinné číslo",
+		"rules": [
+			{"regex": "(\\d+)(,)(\\d{2})", "replace":"$1 celých $3 setin", "data":{"check":true}},
+			{"regex": "(\\d+)(,)(\\d{3})", "replace":"$1 celých $3 tisícin", "data":{"check":true}},
+			{"regex": "(\\d+)(,)(\\d)", "replace":"$1 celých $3", "data":{"check":true}}
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "číslo s tečkou oddělující tisíce",
+		"rules": [
+			{"regex": "(\\d{1,3})\\.(\\d{3})\\.(\\d{3})", "replace":"$1$2$3", "wholeWord":true},
+			{"regex": "(\\d{1,3})\\.(\\d{3})", "replace":"$1$2", "wholeWord":true}
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "časový údaj",
+		"rules": [
+            { "firstCharHint": "d", "regex": "(24|23|22|21|20|1\\d|0\\d):([0-6]\\d|\\d):(\\d{2}) (hodin)", "mergeInto": "time", "regexMap": [ null, ["hour", "i"], ["minute", "i"], ["second", "i"]] },
+			{ "firstCharHint": "d", "regex": "(24|23|22|21|20|1\\d|0\\d|\\d):([0-6]\\d) (hodin)", "mergeInto": "time", "regexMap": [ null, ["hour", "i"], ["minute", "i"]] },
+			{ "firstCharHint": "d", "regex": "(24|23|22|21|20|1\\d|0\\d|\\d)\\.([0-6]\\d) (hodin)", "mergeInto": "time", "regexMap": [ null, ["hour", "i"], ["minute", "i"]] },
+			{ "firstCharHint": "d", "regex": "(24|23|22|21|20|1\\d|0\\d|\\d),([0-6]\\d) (hodin)", "mergeInto": "time", "regexMap": [ null, ["hour", "i"], ["minute", "i"]] },
+		    { "firstCharHint": "d", "regex": "(24|23|22|21|20|1\\d|0\\d):([0-6]\\d):(\\d{2}) ((hod)\\.)?", "mergeInto": "time", "regexMap": [ null, ["hour", "i"], ["minute", "i"], ["second", "i"]] },
+			{ "firstCharHint": "d", "regex": "(24|23|22|21|20|1\\d|0\\d):([0-6]\\d) ((hod)\\.)?", "mergeInto": "time", "regexMap": [ null, ["hour", "i"], ["minute", "i"]] },
+			{ "firstCharHint": "d", "regex": "(24|23|22|21|20|1\\d|0\\d|\\d)\\.([0-6]\\d) ((hod)\\.)?", "mergeInto": "time", "regexMap": [ null, ["hour", "i"], ["minute", "i"]] },
+            { "firstCharHint": "d", "regex": "(24|23|22|21|20|1\\d|0\\d|\\d)\\.([0-6]\\d)", "left": ["od", "do"], "mergeInto": "time", "regexMap": [ null, ["hour", "i"], ["minute", "i"]] },
+            { "firstCharHint": "d", "regex": "(24|23|22|21|20|1\\d|0\\d|\\d):([0-6]\\d)", "left": ["od", "do"], "mergeInto": "time", "regexMap": [ null, ["hour", "i"], ["minute", "i"]] }
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "datum",
+		"rules": [
+		    { "firstCharHint": "d", "regex": "([123]?[0-9]\\.) (ledna|února|března|dubna|května|června|července|srpna|září|října|listopadu|prosince)( [12][0-9]{3})?", "mergeInto": "date", "left": "k ", "regexMap": [ null, ["day", "i"], "textMonth", ["year", "i"]], "data": { "textMonth": true, "case": 3 } },
+			{ "firstCharHint": "d", "regex": "([0123]?\\d)\\. ?(11|12|10|0?\\d)\\.( ?[12][0-9]{3})?", "mergeInto": "date", "left": "k", "regexMap": [ null, ["day", "i"], ["month", "i"], ["year", "i"]], "data": {"case": 3}},
+			{ "firstCharHint": "d", "regex": "([123]?[0-9]\\.) (ledna|února|března|dubna|května|června|července|srpna|září|října|listopadu|prosince)( [12][0-9]{3})?", "mergeInto": "date", "regexMap": [ null, ["day", "i"], "textMonth", ["year", "i"]], "data": { "textMonth": true } },
+			{ "regex": "([0123]?\\d)\\.\\s?(11|12|10|0?\\d)\\.(\\s?[12][0-9]{3})?", "mergeInto": "date", "regexMap": [ null, ["day", "i"], ["month", "i"], ["year", "i"]] }
+		]
+	},
+{
+		"action": "Rules",
+		"comment": "skloňování čísel",
+		"rules": [
+            {"regex": "(\\d+)(\\.)", "data":{"check": true}, "left":["do", "od", "z","Do", "Od", "Z"], "right":["let"], "data":{"case":2, "gender": "m", "check": false, "style": "ordinal"}, "replace": "$1"},		    
+            {"regex": "(\\d+)(\\.)", "left":["do", "od", "z","Do", "Od", "Z"], "right":["dne", "roku", "měsíce"], "data":{"case":2, "gender": "m", "check": false, "style": "ordinal"}, "replace": "$1"},
+            {"regex": "(\\d+)(\\.)", "left":["k", "K", "ke", "Ke"], "right":["dni", "roku", "měsíci"], "data":{"case":3, "gender": "m", "check": false, "style": "ordinal"}, "replace": "$1"},
+		    {"regex": "(\\d+)(\\.)", "left":["v", "V", "ve", "Ve"], "right":["roce", "měsíci"], "data":{"case":6, "gender": "m", "check": false, "style": "ordinal"}, "replace": "$1"},
+		    {"regex": "(\\d+)(\\.)", "left":["do", "od", "z","Do", "Od", "Z"], "data":{"case":2, "gender": "m", "check": true, "style": "ordinal"}, "replace": "$1"},
+		    {"regex": "(\\d+)(\\.)", "left":["v", "V", "ve", "Ve"], "data":{"case":6, "gender": "m", "style": "ordinal"}, "replace": "$1"},
+		    {"regex": "(\\d+)(\\.)", "left":["s", "S", "se", "Se"], "right":["rokem", "měsícem", "dnem"], "data":{"case":6, "gender": "m", "check": false, "style": "ordinal"}, "replace": "$1"},
+		    {"regex": "(\\d+)(\\.)", "left":["s", "S", "se", "Se"], "data":{"case":6, "check": true, "style": "ordinal"}, "replace": "$1"},
+		    {"regex": "(\\d+)(\\.)", "left": ["lomeno", "roce", "roku", "číslo", "popisné", "odst.", "leden", "únor", "březen", "duben", "květen", "červen", "červenec", "srpen", "září", "říjen", "listopad", "prosinec", "ledna", "února", "března", "dubna", "května", "června", "července", "srpna", "září", "října", "listopadu", "prosince", "lednu", "únoru", "březnu", "dubnu", "květnu", "červnu", "červenci", "srpnu", "září", "říjnu", "listopadu", "prosinci"], "replace": "$1$2"},           
+            {"regex": "(\\d+)(\\.)", "right": ["@end"], "replace": "$1$2"},
+		    {"regex": "(\\d+)(\\.)", "data":{"check": true, "style": "ordinal"}, "replace": "$1"},		    
+			{"regex": "(\\d+)", "left":["do", "od", "z","Do", "Od", "Z"], "right":["dnů", "dní", "měsíců", "let"], "data":{"case":2, "gender": "m", "check": false}},
+            {"regex": "(\\d+)", "left":["do", "od", "z", "Do", "Od", "Z"], "right":["splátek"], "data":{"case":2, "gender": "f", "check": false}},
+            {"regex": "(\\d+)", "left":["do", "od", "z", "Do", "Od", "Z"], "data":{"case":2, "gender": "m", "check": true}},
+            {"regex": "(\\d+)", "left":["v", "ve", "Ve", "V", "po", "Po"], "data":{"case":6}},
+            {"regex": "(\\d+)", "left":["v", "ve", "Ve", "V"], "right": ["hod", "hod.", "hodin"], "data":{"case":1}},
+            {"regex": "(\\d+)", "left":["s", "S", "se", "Se"], "data":{"case":7}},
+            {"regex": "(\\d+)", "left":["od","v","s","kolem","o","u","a"], "data":{"check":true}},
+            {"regex": "1", "left":["rok","měsíc", "den"], "data":{"case":1, "gender": "m", "check":true}}
+
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "čísla faktur apod. číst po jedné číslici + hodně dlouhá čísla",
+		"rules": [
+			{ "firstCharHint": "d", "regex": "(\\d{5,30})", "wholeWord": true, "data": {"spell": true }, "left": ["číslo", "číslem"]},
+			{ "firstCharHint": "d", "regex": "(\\d{14,30})", "wholeWord": true, "data": {"spell": true }}
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "e-mail",
+		"rules": [
+			{"regex": "[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]{2,3}", "mergeInto": "email", "regexMap": [ "value" ] },
+			{"regex": "(https?://)?(www.)?[a-z]+\\.[a-zA-Z]{2,3}", "mergeInto": "email", "regexMap": [ "value" ]}
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "závorky a uvozovky za koncem věty - prohození",
+		"rules": [
+			{"search": ".\"", "wholeWord": false, "replace": "\"."},
+			{"search": "!\"", "wholeWord": false, "replace": "\"!"},
+			{"search": ".“", "wholeWord": false, "replace": "“."},
+			{"search": "!“", "wholeWord": false, "replace": "“!"},
+			{"search": ".)", "wholeWord": false, "replace": ")."},
+			{"search": "!)", "wholeWord": false, "replace": ")!"}
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "frázování - závorky",
+		"rules": [
+			{ "search": ")", "wholeWord": false, "replace": "konec závorky", "insertBefore": { "type": "phraseBreak" }, "insertAfter": { "type": "phraseBreak" } },
+			{ "search": "]", "wholeWord": false, "replace": "konec závorky", "insertBefore": { "type": "phraseBreak" }, "insertAfter": { "type": "phraseBreak" }  },	
+			{"search": "(", "wholeWord": false, "replace": "v závorce", "insertBefore": { "type": "phraseBreak" } },
+			{"search": "[", "wholeWord": false, "replace": "v závorce", "insertBefore": { "type": "phraseBreak" } },
+			{"search": "„", "wholeWord": false, "replace": "uvozovky", "insertBefore": { "type": "phraseBreak" } },
+			{"search": "“", "wholeWord": false, "replace": "konec uvozovek", "insertBefore": { "type": "phraseBreak" }, "insertAfter": { "type": "phraseBreak" } },
+			{"search": " \"", "wholeWord": false, "replace": "uvozovky", "insertBefore": { "type": "phraseBreak" } },
+			{"search": "\"", "right": [" ", ".", "!", ","], "wholeWord": false, "replace": "konec uvozovek", "insertBefore": { "type": "phraseBreak" }, "insertAfter": { "type": "phraseBreak" } }
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "frázování - spojky",
+		"rules": [
+			{ "search": "a", "wholeWord": true, "insertBefore": { "type": "phraseBreak" }, "condition": {"data": {"spell": false} }},
+			{ "search": "nebo", "wholeWord": true, "insertBefore": { "type": "phraseBreak" } }
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "hláskování",
+		"rules": [
+			{ "regex": "([bcdefghjlmnpqrtwxyščřžťďň])(?=\\s)", "wholeWord": true, "matchCase": true, "condition": { "@isset:spell": false }, "data": { "spell": true  } }
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "odstranění uvozovek",
+		"rules": [
+			{ "search": "\"", "wholeWord": false, "replace": ""},
+			{ "search": "„", "wholeWord": false, "replace": ""},
+			{ "search": "“", "wholeWord": false, "replace": ""}
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "sloučení pro slova e-mail, e-shop (aby byla nalezena ve slovníku)",
+		"rules": [
+			{ "regex": "e-mail([a-z]|á|é|í|ó|ů|ú|ý|ě|ž|š|č|ř|ď|ť|ň){0,6}", "mergeInto": "text", "regexMap": [ "text" ], "data": {"kept": true}},
+			{ "regex": "e-shop([a-z]|á|é|í|ó|ů|ú|ý|ě|ž|š|č|ř|ď|ť|ň){0,6}", "mergeInto": "text", "regexMap": [ "text" ], "data": {"kept": true}}
+		]
+	},	
+	{
+		"action": "Rules",
+		"comment": "frázování - interpunkce",
+		"rules": [
+			{ "searchSpecial": "sentence_dot", "wholeWord": false, "matchCase": true,"data": {"type": "sentenceBreak" }   },
+			{ "search": ":", "wholeWord": false, "right": " ", "rawContext": true, "matchCase": true, "data": { "type": "sentenceBreak" } },
+			{ "search": "!", "wholeWord": false, "right": " ", "rawContext": true, "matchCase": true, "data": { "type": "sentenceBreak" } },
+			{ "search": "?", "wholeWord": false, "right": " ", "rawContext": true, "matchCase": true, "data": { "type": "sentenceBreak", "question": true } },
+			{ "search": ",", "wholeWord": false, "right": " ", "rawContext": true, "matchCase": true, "data": { "type": "phraseBreak" } },
+			{ "search": ";", "wholeWord": false, "right": " ", "rawContext": true, "matchCase": true, "data": { "type": "phraseBreak" } },
+			{ "search": "-", "wholeWord": false, "right": " ", "left": " ", "rawContext": true, "matchCase": true, "data": { "type": "phraseBreak" } },
+			{ "search": "–", "wholeWord": false, "right": " ", "left": " ", "rawContext": true, "matchCase": true, "data": { "type": "phraseBreak" } },
+			{ "regex": "\\?$", "wholeWord": false, "data": { "type": "sentenceBreak", "question": true } }
+		]
+	},
+	{
+		"action": "Rules",
+		"comment": "frázování - uvozovky",
+		"rules": [
+		]
+	},
+	{ "action": "TokenData", "config": "abbrevs.json" },
+
+
+	{
+		"action": "ExpandSpecial",
+		"special": "rozsudek/cislo_spisu",
+		"spell": true,
+		"wholeNumber": true
+	},
+	{
+		"action": "ExpandSpecial",
+		"special": "cislo_uctu",
+		"numberStyle": "cisla_po_dvou",
+		"spell": true
+	},
+	{
+		"action": "ExpandSpecial",
+		"special": "reg_znacka",
+		"numberStyle": "cisla_po_dvou",
+		"spell": true
+	},
+	{
+		"action": "ExpandSpecial",
+		"special": "rodne_cislo",
+		"numberStyle": "cisla_po_dvou",
+		"spell": true
+	},
+	{
+		"action": "ExpandDate"
+	},
+	{
+		"action": "ExpandEmail"
+	},
+	{
+		"action": "ExpandTime",
+		"hourNorm": [
+			[0, "nula"]
+		],
+		"minuteNorm": [
+			[0, "nula nula"],
+			[1, "nula jedna"],
+			[2, "nula dva"],
+			[3, "nula tři"],
+			[4, "nula čtyři"],
+			[5, "nula pět"],
+			[6, "nula šest"],
+			[7, "nula sedum"],
+			[8, "nula osum"],
+			[9, "nula devět"]
+		]
+	},
+	{
+		"action": "Rules",
+		"rules": [
+			{ "condition": { "type": "numberWithStyle", "spell": true, "style": "cisla_po_dvou" }, "data": { "spell": false }}
+		]
+	},
+	{
+		"action": "NormalizeNumbers",
+		"type": "numberWithStyle",
+		"rules": "numbers_long.txt",
+		"style": "cisla_po_dvou"
+	},
+	{
+		"action": "NormalizeNumbers",
+		"type": "number",
+		"rules": "numbers_ordinal.txt",
+		"style": "ordinal"
+	},
+	{
+		"action": "NormalizeNumbers",
+		"type": "number",
+		"rules": "numbers_cardinal.txt"
+	},
+	{
+		"action": "PronounceableClassifier",
+		"trigramsFn": "trigrams.txt"
+	},
+	{
+		"action": "Rules",
+		"rules": [
+			{ "condition": { "type": "text", "unpronounceable": true }, "data": { "spell": true } }
+		]
+	},
+	{
+		"action": "ApplyDict",
+		"path": "ortexcps_general.tdict"
+	},
+	{
+		"action": "ApplyDict",
+		"path": "ortexcps_streets.tdict"
+	},
+	{
+		"action": "ApplyDict",
+		"path": "ortexcps_names.tdict"
+	},
+	{
+		"action": "ApplyDict",
+		"path": "ortexcps_geographic.tdict"
+	},
+	{
+		"action": "ApplyDict",
+		"path": "ortexcps_foreign_la.tdict"
+	},
+	{
+		"action": "ApplyDict",
+		"path": "ortexcps_foreign_fr.tdict"
+	},
+	{
+		"action": "ApplyDict",
+		"path": "ortexcps_foreign_en.tdict"
+	},
+	{
+		"action": "ApplyDict",
+		"path": "ortexcps_foreign_de.tdict"
+	},
+	{
+		"action": "ApplyDict",
+		"path": "ortexcps_firms.tdict"
+	},
+	{
+		"action": "ApplyDict",
+		"path": "ortexcps_alza.tdict"
+	},
+	{
+		"action": "Rules",
+		"comment": "zvýraznění skupin velkých souhlásek",
+		"rules": [
+			{"regex": "[A-ZÁÉĚÍÓÚŮÝČĎŇŘŠŤŽ]{3,10}", "wholeWord": true, "matchCase": true, "condition": { "@isset:spell": false, "@isset:norm": false }, "data": {"spell": true, "check": true }},
+			{"regex": "[BCDFGHJKLMNPQRSTVWXZČĎŇŘŠŤŽ]{2,10}", "wholeWord": true, "matchCase": true, "condition": { "@isset:spell": false, "@isset:norm": false }, "data": {"spell": true, "check": true }}
+		]
+	},
+	{
+		"action": "Spell",
+		"config": "spelling.json"
+	},
+	{
+		"action": "DictContains",
+		"dict": "IN_czech.utf8.all.tdict",
+		"ifNot": { "check": true }
+	},
+	{
+		"action": "FinishWords"
+	},
+	{
+		"action": "CountSyllables",
+		"vowels": [ "a", "ou", "au", "eu", "e", "i", "o", "u", "á", "é", "ě", "í", "ó", "ú", "ů", "y", "ý" ]
+	},
+	{ "action": "DistributeSilences" },
+	{
+		"action": "CheckBreaks"
+	},
+	{
+		"action": "CleanUp"
+	},
+	{
+		"action": "NormalizeAlphabet",
+		"comment": "vyčištění od nepodporovaných znaků",
+		"alphabet": [
+			"ABCDEFGHIJKLMNOPQRSTUVWXYZĚŠČŘÉŽÝÁÍŤÚŮÓĎŇ",
+			"abcdefghijklmnopqrstuvwxyzěščřéžýáíťúůóďň",
+			"üëäöŕĺľô",
+			"ueaorllo"
+		]
+	}
+]

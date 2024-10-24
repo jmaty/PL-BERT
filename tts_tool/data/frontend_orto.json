@@ -1,0 +1,4 @@
+[
+	{ "action": "@include", "file": "general_tts.json" },
+	{ "action": "@split", "after": "sentenceBreak" }
+]

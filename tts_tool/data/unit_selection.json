@@ -1,0 +1,45 @@
+{
+    
+    "costNormalization": "cost_norm", 
+    "files": [
+        { "name": "diphone", "dtype": "uint8" },
+        { "name": "duration", "dtype": "float32" },
+        { "name": "energy", "dtype": "float32" },
+        { "name": "lf0", "dtype": "float32" },
+        { "name": "avgLf0", "dtype": "float32" },
+        { "name": "mceps", "dtype": "float32", "dim": 12 },
+        { "name": "prosodeme", "dtype": "int8" },
+        { "name": "voiced", "dtype": "int8" },
+        { "name": "wordPosition", "dtype": "float32", "dim": 3 }
+    ],
+    "mapping": [
+        { "name": "diphoneLeft", "file": "diphone", "offset":  0 },
+        { "name": "diphoneRight", "file": "diphone", "offset": 1 },
+        { "name": "contextLeft", "file": "diphone", "offset": -1 },
+        { "name": "contextRight", "file": "diphone", "offset": 2 },
+        { "name": "durationLeft", "file": "duration", "offset": -1 },
+        { "name": "durationRight", "file": "duration", "offset": 1 },
+        { "name": "mcepLeft", "file": "mceps", "offset": 0 },
+        { "name": "mcepRight", "file": "mceps", "offset": 1 },
+        { "name": "lf0Left", "file": "lf0", "offset": 0 },
+        { "name": "lf0Right", "file": "lf0", "offset": 1 },
+        { "name": "energyLeft", "file": "energy", "offset": 0 },
+        { "name": "energyRight", "file": "energy", "offset": 1 },
+        { "name": "voicedLeft", "file": "voiced", "offset": 0 },
+        { "name": "voicedRight", "file": "voiced", "offset": 1 }
+    ],
+    "joinCost": [
+        { "left": "voicedRight", "right": "voicedLeft", "type": "eq", "weight": 1.0 },
+        { "left": "lf0Right", "right": "lf0Left", "type": "l2", "weight": 10.0 },
+        { "left": "mcepRight", "right": "mcepLeft", "type": "l2", "weight": 5.0 },
+        { "left": "energyRight", "right": "energyLeft", "type": "l2", "weight": 2.0 },
+        { "left": "duration", "right": "durationLeft", "type": "l2", "weight": 1.0 },
+        { "left": "durationRight", "right": "duration", "type": "l2", "weight": 1.0 }
+    ],
+    "targetCost": [
+        { "ref": "prosodeme", "type": "eq", "weight": 1.0 },
+        { "ref": "contextLeft", "type": "eq", "weight": 1.0 },
+        { "ref": "contextRight", "type": "eq", "weight": 1.0 },
+        { "ref": "wordPosition", "type": "l2", "weight": 1.0 }
+    ]
+}

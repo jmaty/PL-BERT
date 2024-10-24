@@ -1,0 +1,22 @@
+[	
+	{
+		"action": "TokenData", 
+		"config": "prepositions.json",
+		"wholeWord": false
+	},
+	{
+		"action": "CountSyllables",
+		"vowels": [ "a", "ou", "au", "eu", "e", "i", "o", "u", "á", "é", "ě", "í", "ó", "ú", "ů", "y", "ý" ]
+	},
+	{ "action": "Rules", "rules": [
+			{ "condition": { "type": "word", "partOfSpeech": "preposition", "syllables": 1 }, "data": { "incline": "right" } },
+			{ "condition": { "type": "word", "partOfSpeech": "preposition", "syllables": 0 }, "data": { "incline": "right" } }
+	]},
+	{ "action": "BuildProsodicWords" },
+	{
+		"action": "BuildPhoneId",
+		"config": "phonetic_alphabet.json"
+	},
+	{ "action": "AddPhonePosition" },
+	{ "action": "BuildPhoneUnits" }
+]

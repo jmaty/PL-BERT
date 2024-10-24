@@ -1,0 +1,89 @@
+// -*- coding: utf-8 -*-
+
+[Groups]
+DUMMY = a,e,i,o,u
+
+//-----------------------------------------------------------------------------
+[Set 1B]    // vyjimecna slova a zjednoduseni skupin
+
+// Prepis "2 ku 1"
+Di - ďi / _
+Ti - ťi / _
+Ji - ňi / _
+Zi - ži / _
+Si - ši / _
+Ci - či / _
+Ri - ři / _
+Qi - ři / _
+ci - ci / _
+DI - ďí / _
+TI - ťí / _
+JI - ňí / _
+ZI - ží / _
+SI - ší / _
+CI - čí / _
+RI - ří / _
+QI - ří / _
+cI - cí / _
+
+// Prepis "1 ku 2"
+y - ou / _
+Y - au / _
+F - eu / _
+w - dz / _
+W - dž / _
+x - ch / _
+G - ch / _
+
+// Prepis "1 ku 1"
+a - a / _
+A - á / _
+b - b / _
+c - c / _
+C - č / _
+d - d / _
+D - ď / _
+e - e / _
+E - é / _
+f - f / _
+g - g / _
+h - h / _
+H - m / _
+i - y / _
+I - ý / _
+j - j / _
+J - ň / _
+k - k / _
+l - l / _
+L - l / _
+m - m / _
+M - m / _
+n - n / _
+N - n / _
+o - o / _
+O - ó / _
+p - p / _
+P - r / _
+Q - ř / _
+r - r / _
+R - ř / _
+s - s / _
+S - š / _
+t - t / _
+T - ť / _
+u - u / _
+U - ú / _
+v - v / _
+z - z / _
+Z - ž / _
+! - 0 / _
+
+//-----------------------------------------------------------------------------
+[Stop Symbols]
+DUMMY
+
+[RC Influence Set]
+DUMMY - DUMMY / _
+
+[Voiced RC Impact Symbols]
+DUMMY

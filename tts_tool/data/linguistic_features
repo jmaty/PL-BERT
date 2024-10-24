@@ -1,0 +1,24 @@
+# Sentence features
+
+int		sentence	numPhones		100
+int		sentence	numWords		20
+bool    sentence    question
+
+# Word Features
+
+coarse	word	pos			4
+bool	word	silence
+int		word	numPhones	15
+# int     word    numVowels   10
+bool	word	first
+bool	word	last
+
+# Phone Features
+
+coarse	phone	 pos		5
+hot		phoneEx	 id
+bool	phone	 voiced
+bool	phone	 vowel
+int		phone	 distVowelLeft	5
+int 	phone 	 distVowelRight  5
+

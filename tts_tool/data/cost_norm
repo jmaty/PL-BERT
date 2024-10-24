@@ -1,0 +1,11 @@
+jc_mcepRight-mcepLeft       45.0   
+jc_voicedRight-voicedLeft   0.8  
+tc_prosodeme                2.0
+jc_lf0Right-lf0Left         10.0    
+tc_contextLeft              1.4   
+tc_contextRight             1.5   
+tc_wordPosition             8.0   
+jc_duration-durationLeft    0.02  
+jc_energyRight-energyLeft   5.0   
+jc_durationRight-duration   0.02    
+

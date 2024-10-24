@@ -1,0 +1,191 @@
+{
+    "sets": [
+        {
+            "data": {
+                "spell": true,
+                "check": false
+            },
+            "keys": [
+                "SOL",
+                "ZTE",
+                "PID",
+                "OK",
+                "ISŠ",
+                "OÚ",
+                "PI",
+                "SI",
+                "ČNB",
+                "CD",
+                "DVD",
+                "EU",
+                "ODS",
+                "ČR",
+                "CZ",
+                "ZČU",
+                "ČSSD",
+                "ČSOB",
+                "USA",
+                "SMS",
+                "USD"
+            ]
+        },
+        {
+            "data": {
+                "spell": false,
+                "check": false
+            },
+            "keys": [
+                "NATO",
+                "BESIP",
+                "URNA",
+                "ČEZ",
+                "SAPI",
+                "CEFTA",
+                "CERN",
+                "JAMU",
+                "JAR",
+                "SIPO",
+                "UFO",
+                "UJEP",
+                "SEČ",
+                "SELČ",
+                "LIFO",
+                "OSA",
+                "VIN",
+                "OSPOD",
+                "AISA"
+            ]
+        }
+    ],
+    "dict": {
+        "UNESCO": {
+            "norm": "unesko"
+        },
+        "AIDS": {
+            "norm": "ajc"
+        },
+        "ASCII": {
+            "norm": "aski"
+        },
+        "IFOR": {
+            "norm": "aj for"
+        },
+        "DIČ": {
+            "norm": "dyč"
+        },
+        "IČO": {
+            "norm": "yčo"
+        },
+        "IP": {
+            "norm": "aj pí"
+        },
+        "COOP": {
+            "norm": "ko op"
+        },
+        "KFOR": {
+            "norm": "ká for"
+        },
+        "SFOR": {
+            "norm": "es for"
+        },
+        "VIP": {
+            "norm": "ví aj pí"
+        },
+        "CIA": {
+            "norm": "sí aj ej"
+        },
+        "IBM": {
+            "norm": "aj bí em"
+        },
+        "JAWS": {
+            "norm": "džóvs"
+        },
+        "WORLD": {
+            "norm": "vórld"
+        },
+        "GPRS": {
+            "norm": "dží pí ár es"
+        },
+        "GPS": {
+            "norm": "dží pí es"
+        },
+        "LG": {
+            "norm": "el dží"
+        },
+        "ACCU": {
+            "norm": "aku"
+        },
+        "ACME": {
+            "norm": "akme"
+        },
+        "AKAI": {
+            "norm": "akaj"
+        },
+        "COM": {
+            "norm": "kom"
+        },
+        "CTEK": {
+            "norm": "sí tek"
+        },
+        "D-SUB": {
+            "norm": "dé sub"
+        },
+        "ECO": {
+            "norm": "eko"
+        },
+        "IOMEGA": {
+            "norm": "ájoumega"
+        },
+        "IRIVER": {
+            "norm": "ájrivr"
+        },
+        "ISO": {
+            "norm": "izo"
+        },
+        "JBIG": {
+            "norm": "džejbig"
+        },
+        "JPEG": {
+            "norm": "džejpeg"
+        },
+        "JPG": {
+            "norm": "džejpeg"
+        },
+        "KGUARD": {
+            "norm": "kejgárd"
+        },
+        "LEA": {
+            "norm": "líja"
+        },
+        "MIO": {
+            "norm": "míjo"
+        },
+        "NETGEAR": {
+            "norm": "netgír"
+        },
+        "NICI": {
+            "norm": "nyki"
+        },
+        "NVIDIA": {
+            "norm": "envídya"
+        },
+        "OKI": {
+            "norm": "oky"
+        },
+        "RAID": {
+            "norm": "rejd"
+        },
+        "RAIKKO": {
+            "norm": "rajko"
+        },
+        "TIFF": {
+            "norm": "tyf"
+        },
+        "ABBYY": {
+            "norm": "aby"
+        },
+        "ICEMAT": {
+            "norm": "ajsmat"
+        }
+    }
+}

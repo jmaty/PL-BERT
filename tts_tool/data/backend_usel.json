@@ -1,0 +1,17 @@
+{
+	"steps": [
+		{ "action": "@include", "file": "usel_preproc.json" },
+		{ "action": "#voicebuild_stop_here"},
+		{ "action": "DiphoneReplacements", "diphoneMap": "diphone_map", "primaryCounts": "primaryCounts" },
+		{ "action": "#webeditor_cut_here"},
+		{ "action": "UnitSelection", "config": "unit_selection.json" }
+	],
+	"speechGenerator": {
+		"type": "CorpusConcatenator",
+		"windowSize": 0.025
+	},
+	"postproc": [
+		{ "action": "AddPhoneTiming" },
+		{ "action": "AddWordTiming" }
+	]
+}

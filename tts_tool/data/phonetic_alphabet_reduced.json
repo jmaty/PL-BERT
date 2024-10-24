@@ -1,0 +1,44 @@
+{
+    "alphabet": [
+        { "letter": "", "epa": "00", "type": "_reserved" },
+        { "letter": "", "epa": "?", "type": "unknown" },
+
+        { "letter": "i", "epa": "i", "sampa": "i", "example": "p[i]vo", "type": "vocal", "category": "short" }, 
+        { "letter": "e", "epa": "e", "sampa": "e", "example": "p[e]s", "type": "vocal", "category": "short" }, 
+        { "letter": "a", "epa": "a", "sampa": "a", "example": "mám[a]", "type": "vocal", "category": "short" }, 
+        { "letter": "o", "epa": "o", "sampa": "o", "example": "b[o]k", "type": "vocal", "category": "short" }, 
+        { "letter": "u", "epa": "u", "sampa": "u", "example": "r[u]m", "type": "vocal", "category": "short" }, 
+
+        { "letter": "", "epa": "@", "sampa": "@", "example": "hláskování", "type": "vocal", "category": "schwa" }, 
+
+        { "letter": "p", "epa": "p", "sampa": "p",   "example": "[p]rak", "type": "consonant", "category": "plosive" }, 
+        { "letter": "b", "epa": "b", "sampa": "b",   "example": "[b]od", "type": "consonant", "category": "plosive" }, 
+        { "letter": "t", "epa": "t", "sampa": "t",   "example": "o[t]ec", "type": "consonant", "category": "plosive" }, 
+        { "letter": "d", "epa": "d", "sampa": "d",   "example": "[d]ům", "type": "consonant", "category": "plosive" }, 
+        { "letter": "ť", "epa": "T", "sampa": "c",   "example": "ku[t]il", "type": "consonant", "category": "plosive" }, 
+        { "letter": "ď", "epa": "D", "sampa": "J\\", "example": "[d]ěti", "type": "consonant", "category": "plosive" }, 
+        { "letter": "k", "epa": "k", "sampa": "k",   "example": "o[k]o", "type": "consonant", "category": "plosive" }, 
+        { "letter": "g", "epa": "g", "sampa": "g",   "example": "[g]uma", "type": "consonant", "category": "plosive" }, 
+        { "letter": "", "epa": "!", "sampa": "?",    "example": "ráz", "type": "consonant", "category": "plosive" }, 
+
+        { "letter": "f", "epa": "f", "sampa": "f",   "example": "[f]acka", "type": "consonant", "category": "fricative" }, 
+        { "letter": "v", "epa": "v", "sampa": "v",   "example": "[v]lak", "type": "consonant", "category": "fricative" }, 
+        { "letter": "s", "epa": "s", "sampa": "s",   "example": "o[s]el", "type": "consonant", "category": "fricative" }, 
+        { "letter": "z", "epa": "z", "sampa": "z",   "example": "ko[z]a", "type": "consonant", "category": "fricative" }, 
+        { "letter": "ř", "epa": "R", "sampa": "P\\", "example": "mo[ř]e", "type": "consonant", "category": "fricative" }, 
+        { "letter": "š", "epa": "S", "sampa": "S",   "example": "po[š]ta", "type": "consonant", "category": "fricative" }, 
+        { "letter": "ž", "epa": "Z", "sampa": "Z",   "example": "[ž]ena", "type": "consonant", "category": "fricative" }, 
+        { "letter": "j", "epa": "j", "sampa": "j",   "example": "vo[j]ák", "type": "consonant", "category": "fricative" }, 
+        { "letter": "ch", "epa": "x", "sampa": "x",  "example": "[ch]yba", "type": "consonant", "category": "fricative" }, 
+        { "letter": "h", "epa": "h", "sampa": "h\\", "example": "[h]ad", "type": "consonant", "category": "fricative" }, 
+        { "letter": "r", "epa": "r", "sampa": "r",   "example": "[r]ak", "type": "consonant", "category": "fricative" }, 
+        { "letter": "l", "epa": "l", "sampa": "l",   "example": "[l]oď", "type": "consonant", "category": "fricative" }, 
+
+        { "letter": "m", "epa": "m", "sampa": "m", "example": "[m]ír", "type": "consonant", "category": "nasal" }, 
+        { "letter": "n", "epa": "n", "sampa": "n", "example": "[n]os", "type": "consonant", "category": "nasal" }, 
+        { "letter": "ň", "epa": "J", "sampa": "J", "example": "la[ň]", "type": "consonant", "category": "nasal" }, 
+
+        { "letter": " ", "epa": "#", "type": "pause" },
+        { "letter": " ", "epa": "%", "type": "breath" }
+    ]
+}

@@ -1,0 +1,74 @@
+ZnelF		     a A e E i I o O u U y Y F b d D w W g j l m M n J N r R v z Z h
+NeZnelF		     p t T c C k Q f x s S !
+
+SlabikF		     a A e E i I o O u U y Y F r l
+NeSlabik	     b c C d D w W f g h x j k m M n J N p R Q s S t T v z Z !
+
+Vokal		     a A e E i I o O u U
+Diftong		     y Y F
+VokalDiftong	 a A e E i I o O u U y Y F
+KratV		     a e i o u
+DlouhV		     A E I O U
+PredV		     e i E I
+ZadV		     o u O U
+StredV		     a A
+NeZaokrV	     a e i A E I
+VysV		     i u I U
+StredoV		     e o E O
+
+Konsonant	     b c C d D w W f g h x j k l m M n J N p r R Q s S t T v z Z !
+ParK		     b p d t D T g k h x v f w c W C z s Z S
+NeParK		     m M n J N r l j R Q
+ParKplusRQ		 b p d t D T g k h x v f w c W C z s Z S R Q
+NeParKplusRQ	 m M n J N r l j
+ZnelK            b d D w W g h j l m M n J N r R v z Z
+NeZnelK          c C f x k p Q s S t T !
+ZnelParK         b d D w W g h v z Z
+ZnelParK_R       b d D w W g h v z Z R
+NeZnelParK       p t T c C k f x s S
+NeZnelParK_Q     p t T c C k f x s S Q
+ZaverK           p b m M t d n N T D J k g !
+ZaverParK        p b t d T D k g
+PoloZaverK       c w C W
+UzinK            f v s z R Q r l S Z j x h
+UzinParK         f v s z S Z x h
+UzinParK_RQ      f v s z R Q S Z x h
+UzinNePar        r l j
+UzinNePar_RQ     r l j R Q
+NosK             m M n N J
+UstK             b c C d D w W f g h x j k l p r R Q s S t T v z Z !
+StredUzinK       f v s z S Z x h
+BokK             l
+KmitUzinK        r R Q
+LikvidK          r l
+RetK             p b m M f v
+ObaRetK          p b m
+RetZubK          M f v
+DasenK           t d n c w s z r R Q l C W S Z
+PredDasenK       t d n c w s z r R Q l
+ZadDasenK        C W S Z
+PatroK           T D J j k g N x
+TvrdPatroK       T D J j
+MekkPatroK       k g N x
+HrtanK           h !
+SumK             b c C d D w W f g h x k p R Q s S t T v z Z r
+SykK             s S z Z
+SonorK           m M n N J r l
+
+Pause            $ #
+
+ParK_bp          b p
+ParK_dt          d t
+ParK_DT          D T
+ParK_wc          w c
+ParK_WC          W C
+ParK_RQ          R Q
+ParK_zs          z s
+ParK_ZS          Z S
+ParK_gk          g k
+ParK_vf          v f
+ParK_hx          h x
+
+CtverK_dtDT      d t D T
+TrojK_nNJ        n N J
+ParK_mM          m M

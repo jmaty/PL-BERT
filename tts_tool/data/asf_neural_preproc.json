@@ -1,0 +1,9 @@
+[
+    {
+        "action": "BuildPhoneId",
+        "config": "phonetic_alphabet.json"
+    },
+    { "action": "AddPhonePosition" },
+    { "action": "BuildPhoneUnits" },
+    { "action": "#voicebuild_stop_here" }
+]
