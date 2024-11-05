@@ -1,6 +1,0 @@
-[
-	{ "action": "AddPhoneContext" },
-	{ "action": "AddWordPosition" },
-	{ "action": "AddPhonePosition" },
-	{ "action": "BuildDiphoneUnits" }
-]

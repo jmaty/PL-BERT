@@ -26,7 +26,17 @@
                 "ČSOB",
                 "USA",
                 "SMS",
-                "USD"
+                "USD",
+                "IPA",
+                "EPA",
+                "TTS",
+                "TSD",
+                "ID",
+                "FFUK",
+                "UK",
+                "ÚOHS",
+                "StB",
+                "STB"
             ]
         },
         {
@@ -53,7 +63,25 @@
                 "OSA",
                 "VIN",
                 "OSPOD",
-                "AISA"
+                "AISA",
+                "NARVAL",
+                "ANO",
+                "BBC",
+                "CNN",
+                "NKÚ",
+                "ČSÚ",
+                "VÚB",
+                "ČHMÚ",
+                "BMW",
+                "MMA",
+                "mma",
+                "HBO",
+                "GDPR",
+                "FBI",
+                "NBA",
+                "PCR",
+                "SÚKL",
+                "ÚOHS"
             ]
         }
     ],
@@ -77,7 +105,8 @@
             "norm": "yčo"
         },
         "IP": {
-            "norm": "aj pí"
+            "norm": "aj pí",
+            "spell": true
         },
         "COOP": {
             "norm": "ko op"
@@ -89,13 +118,16 @@
             "norm": "es for"
         },
         "VIP": {
-            "norm": "ví aj pí"
+            "norm": "ví aj pí",
+            "spell": true
         },
         "CIA": {
-            "norm": "sí aj ej"
+            "norm": "sí aj ej",
+            "spell": true
         },
         "IBM": {
-            "norm": "aj bí em"
+            "norm": "aj bí em",
+            "spell": true
         },
         "JAWS": {
             "norm": "džóvs"
@@ -104,13 +136,16 @@
             "norm": "vórld"
         },
         "GPRS": {
-            "norm": "dží pí ár es"
+            "norm": "dží pí ár es",
+            "spell": true
         },
         "GPS": {
-            "norm": "dží pí es"
+            "norm": "dží pí es",
+            "spell": true
         },
         "LG": {
-            "norm": "el dží"
+            "norm": "el dží",
+            "spell": true
         },
         "ACCU": {
             "norm": "aku"
@@ -186,6 +221,65 @@
         },
         "ICEMAT": {
             "norm": "ajsmat"
+        },
+        "NARVAL":{
+            "norm": "narval"
+        },
+        "ANO":{
+            "norm": "ano"
+        },
+        "NKÚ":{
+            "norm": "en ká ú",
+            "spell": true
+        },
+        "ČSÚ":{
+            "norm": "čé es ú",
+            "spell": false
+        },
+        "VÚB":{
+            "norm": "vé ú bé"
+        },
+        "ČHMÚ":{
+            "norm": "čé há em ú"
+        },
+        "BMW":{
+            "norm": "bé em vé"
+        },
+        "MMA":{
+            "norm": "em em ej"
+        },
+        "mma":{
+            "norm": "em em ej"
+        },
+        "HBO":{
+            "norm": "ejdž bí ou"
+        },
+        "GDPR":{
+            "norm": "dží dí pí ár"
+        },
+        "FBI":{
+            "norm": "ef bí aj"
+        },
+        "NBA":{
+            "norm": "en bí ej"
+        },
+        "PCR":{
+            "norm": "pí cí ár"
+        },
+        "SÚKL":{
+            "norm": "súkl"
+        },
+        "ÚOHS":{
+            "norm": "ú ó há es",
+            "spell": false
+        },
+        "StB":{
+            "norm": "es té bé",
+            "spell": false
+        },
+        "STB":{
+            "norm": "es té bé",
+            "spell": false
         }
     }
 }

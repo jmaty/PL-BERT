@@ -1,0 +1,25 @@
+{
+    "unknownChar": "AAA",
+    "dict": {
+        "|": "svislítko",
+        "0": "nula",
+        "1": "jedna",
+        "2": "dva",
+        "3": "tři",
+        "4": "čtyři",
+        "5": "pět",
+        "6": "šest",
+        "7": "sedum",
+        "8": "osm",
+        "9": "devět",
+        "%": "procent",
+        "/": "lomeno",
+        "+": "plus",
+        "=": "rovná se",
+        "*": "hvězdička",
+        "#": "křížek",
+        "&": "end",
+        "^": "stříška",
+        "@": "zavináč"
+    }
+}
