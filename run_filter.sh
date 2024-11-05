@@ -9,13 +9,14 @@ export LC_NUMERIC="en_US.UTF-8"
 # Default params
 EXP="filter_para"
 QUEUE="default"
-HOURS=24
+HOURS=720
 # QSUB ARGUMENTS
 MEM=64gb
 LSCRATCH=20gb
+NCPUS=32
 
 if [[ "$#" -lt 2 ]]; then
-     echo "Usage: run_filter.sh cfg notebook [hours]"
+     echo "Usage: run_filter.sh cfg notebook"
      exit 1
 fi
 
@@ -23,7 +24,7 @@ CFG=$1
 INTB=$2
 
 # Select argument
-SELECT="-l select=1:ncpus=2:mem=$MEM:scratch_local=$LSCRATCH"
+SELECT="-l select=1:ncpus=$NCPUS:mem=$MEM:scratch_local=$LSCRATCH"
 # Walltime argument
 WALLTIME="-l walltime=$HOURS:00:00"
 
@@ -49,4 +50,4 @@ qsub -N "$EXP" \
      $SELECT \
      -- $SINGULARITY "$INTB" "$CFG" "$ONTB"
 
-echo "$EXP: $QUEUE$CLUSTER, HOURS: $HOURS"
+echo "$EXP: $QUEUE$CLUSTER, CPUs: $NCPUS, HOURS: $HOURS"
