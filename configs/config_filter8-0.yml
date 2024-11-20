@@ -1,10 +1,10 @@
-inp_paragraph_file: '../BERT_cs/WIKI_C4Cleaned.txt'
-out_sentence_file: '../BERT_cs/WIKI_C4Cleaned.sentences.norm2.txt'
-not_supported_chars_file: './not_supported_chars2.txt'
+inp_paragraph_file: '../BERT_cs/WIKI_C4Cleaned_part0.txt'
+out_sentence_file: '../BERT_cs/WIKI_C4Cleaned.sentences.norm_part0.txt'
+not_supported_chars_file: './not_supported_chars8-0.txt'
 ttstool_bin: './tts_tool/tts_tool'
 ttstool_data: './tts_tool/data/frontend_normalize.json'
 chunk_size: 4       # number of paragraphs processed by a single CPU
-batch_size: 1000    # # number of sentences to write in once
+batch_size: 1000    # number of sentences to write at once
 
 supported_chars:
     lower_chars: 'aáäbcčdďeéěfghiíjklmnňoóöpqrřsštťuúůüvwxyýzž'
@@ -29,5 +29,6 @@ replacements:
         'př. n. l.': 'před naším letopočtem'
         'st. př. Kr.': 'století před Kristem'
         'st. př. kr.': 'století před Kristem'
+        ' napr.': ' např.'
     postprocess:
         ' ,nebo': ', nebo'

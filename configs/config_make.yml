@@ -1,0 +1,4 @@
+inp_text_file: '../BERT_cs/WIKI_C4Cleaned.sentences.norm.txt'
+out_dataset_folder: 'datasets/cz-wikipedia.processed'
+tokenizer_path: 'fav-kky/FERNET-C5'
+punctuation: '.,;:-?!…' # !!! TODO: definovat
