@@ -1,5 +1,5 @@
 [
-	{ "action": "@include", "file": "tts-server.json" },
+	{ "action": "@include", "file": "normalize.json" },
 	{ "action": "@split", "after": "sentenceBreak" },
 	{ "action": "InsertPauses" },
 	{ "action": "FinishWords" },

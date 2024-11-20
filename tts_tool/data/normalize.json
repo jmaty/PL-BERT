@@ -328,7 +328,7 @@
 	},
 	{
 		"action" : "Spell",
-		"config" : "spelling.json",
+		"config" : "spelling_jm.json",
 		"comment": "Hláskování",
 		"active": true
 	},

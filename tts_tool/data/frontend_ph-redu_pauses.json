@@ -1,5 +1,5 @@
 [
-	{ "action": "@include", "file": "tts-server.json" },
+	{ "action": "@include", "file": "normalize.json" },
 	{ "action": "@split", "after": "sentenceBreak" },
 	{ "action": "Rules", "rules": [
 			{ "condition": { "type": "word", "partOfSpeech": "preposition", "syllables": 1 }, "data": { "incline": "right" } },

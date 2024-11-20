@@ -11,6 +11,7 @@
 	{
 		"action": "Rules",
 		"comment": "pomlčka mezi číslem a textem",
+		"active": true,
 		"rules": [
 			{ "search": "-",  "rightCondition": {"type": "number"}, "wholeWord": false, "replace": " ", "leftCondition": {"type": "text"}}
 		]
@@ -19,7 +20,7 @@
 		"action": "Rules",
 		"comment": "záporné číslo",
 		"rules": [
-			{ "search": "-",  "leftCondition": {"type": "text"}, "rightCondition": {"type": "number"}, "wholeWord": false, "replace": "mínus " }
+			{ "search": "-", "rightCondition": {"type": "number"}, "wholeWord": false, "replace": "mínus " }
 		]
 	}
 ]
