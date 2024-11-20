@@ -1,14 +1,16 @@
 #coding: utf-8
 
 import logging
+import pickle
 import random
+
 import numpy as np
 import torch
 import torch.nn.functional as F
 from torch import nn
 from torch.utils.data import DataLoader
 
-from text_utils import TextCleaner
+from text_utils import TextCleaner, load_symbol_dict
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -17,11 +19,14 @@ np.random.seed(1)
 random.seed(1)
 
 class FilePathDataset(torch.utils.data.Dataset):
-    def __init__(self, dataset,
+    def __init__(self,
+                 dataset,
                  tokenizer=None,
+                 token_maps="token_maps.pkl",
                  word_separator=3039,
                  token_separator=" ",
                  token_mask="M",
+                 symbol_dict_path="symbol_dict.txt",
                  max_mel_length=512,
                  word_mask_prob=0.15,
                  phoneme_mask_prob=0.1,
@@ -32,17 +37,19 @@ class FilePathDataset(torch.utils.data.Dataset):
         self.word_mask_prob = word_mask_prob
         self.phoneme_mask_prob = phoneme_mask_prob
         self.replace_prob = replace_prob
-        self.text_cleaner = TextCleaner()
+        self.text_cleaner = TextCleaner(load_symbol_dict(symbol_dict_path))
 
         self.word_separator = word_separator
         self.token_separator = token_separator
         self.token_mask = token_mask
 
+        with open(token_maps, 'rb') as handle:
+            self.token_maps = pickle.load(handle)
+
     def __len__(self):
         return len(self.data)
 
     def __getitem__(self, idx):
-
         phonemes = self.data[idx]['phonemes']   # list of phonetic words
         input_ids = self.data[idx]['input_ids'] # list of word IDs
 
@@ -57,45 +64,47 @@ class FilePathDataset(torch.utils.data.Dataset):
         # print("phoneme_list:", phoneme_list)
 
         masked_index = []
-        for z in zip(phonemes, input_ids):
-            z = list(z)
-
-            # Make word consisting of its word ID repeated number of phonemes times
-            words.extend([z[1]] * len(z[0]))
-            words.append(self.word_separator)   # add word separator
+        for phw, wid in zip(phonemes, input_ids):
+            # Extend words with repeated word ID and a word separator
+            # - word ID is repeated number of phonemes times
+            # - each word ID is a list of word-piece IDs
+            # - word separator is a appended as a 1-element list with its ID
+            words.extend([wid]*len(phw) + [[self.word_separator]])
             # Add space between ground-truth phoneme words
-            labels += z[0] + " "
+            labels += phw + " "
 
+            # Determine whether to mask the word
             if np.random.rand() < self.word_mask_prob:
                 if np.random.rand() < self.replace_prob:
-                    if np.random.rand() < (self.phoneme_mask_prob / self.replace_prob): 
-                        phoneme += ''.join([phoneme_list[np.random.randint(0, len(phoneme_list))] for _ in range(len(z[0]))])  # randomized
+                    # Randomize or keep original phoneme based on probabilities
+                    if np.random.rand() < (self.phoneme_mask_prob / self.replace_prob):
+                        phoneme += ''.join(phoneme_list[np.random.randint(0, len(phoneme_list))] for _ in range(len(phw))) # randomized
                     else:
-                        phoneme += z[0]
+                        phoneme += phw
                 else:
-                    phoneme += self.token_mask * len(z[0]) # masked
-
-                masked_index.extend((np.arange(len(phoneme) - len(z[0]), len(phoneme))).tolist())
+                    phoneme += self.token_mask * len(phw) # masked
+                # Track masked indices
+                masked_index.extend((np.arange(len(phoneme) - len(phw), len(phoneme))).tolist())
             else:
-                phoneme += z[0]
+                phoneme += phw # ground-truth
 
-            phoneme += self.token_separator
+            phoneme += self.token_separator # add space between phonetic words
 
         # phoneme: masked phoneme string with spaces between words
         # print('phoneme:', phoneme)
-
         mel_length = len(phoneme)
         masked_idx = np.array(masked_index)
-        masked_index = []
+        
+        # if sentence is longer than max_mel_length, take a random slice of it
         if mel_length > self.max_mel_length:
             random_start = np.random.randint(0, mel_length - self.max_mel_length)
-            phoneme = phoneme[random_start:random_start + self.max_mel_length]
-            words = words[random_start:random_start + self.max_mel_length]
-            labels = labels[random_start:random_start + self.max_mel_length]
-
-            for m in masked_idx:
-                if m >= random_start and m < random_start + self.max_mel_length:
-                    masked_index.append(m - random_start)
+            slice_end = random_start + self.max_mel_length
+            # Slicing phoneme, words and labels
+            phoneme = phoneme[random_start:slice_end]
+            words = words[random_start:slice_end]
+            labels = labels[random_start:slice_end]
+            # adjust masked_index for the slice
+            masked_index = [m - random_start for m in masked_idx if random_start <= m < slice_end]
         else:
             masked_index = masked_idx
 
@@ -112,7 +121,7 @@ class FilePathDataset(torch.utils.data.Dataset):
         # print("phoneme", phoneme)
         # print("labels", labels)
 
-        # words = [self.token_maps[w]['token'] for w in words]
+        words = [self.token_maps[tuple(w)]['token'] for w in words]
 
         assert len(phoneme) == len(words), f'phonemes: {len(phoneme)} vs words: {len(words)}'
         assert len(phoneme) == len(labels)
@@ -140,23 +149,23 @@ class Collater(object):
         
 
     def __call__(self, batch):
-        # batch[0] = wave, mel, text, f0, speakerid
         batch_size = len(batch)
 
-        # sort by mel length
+        # sort batch by length
         lengths = [b[1].shape[0] for b in batch]
         batch_indexes = np.argsort(lengths)[::-1]
         batch = [batch[bid] for bid in batch_indexes]
 
-        max_text_length = max([b[1].shape[0] for b in batch])
+        # get max length
+        max_text_length = max(b[1].shape[0] for b in batch)
 
         words = torch.zeros((batch_size, max_text_length)).long()
         labels = torch.zeros((batch_size, max_text_length)).long()
         phonemes = torch.zeros((batch_size, max_text_length)).long()
         input_lengths = []
         masked_indices = []
-        for bid, (phoneme, word, label, masked_index) in enumerate(batch):
 
+        for bid, (phoneme, word, label, masked_index) in enumerate(batch):
             text_size = phoneme.size(0)
             words[bid, :text_size] = word
             labels[bid, :text_size] = label
@@ -191,8 +200,9 @@ def build_dataloader(df,
                              batch_size=batch_size,
                              shuffle=(not validation),
                              num_workers=num_workers,
-                             drop_last=(not validation),
+                             # drop_last=(not validation),
+                             drop_last=False,
                              collate_fn=collate_fn,
-                             pin_memory=(device != 'cpu'))
+                             pin_memory=device != 'cpu')
 
     return data_loader
