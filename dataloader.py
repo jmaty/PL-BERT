@@ -94,7 +94,7 @@ class FilePathDataset(torch.utils.data.Dataset):
         # print('phoneme:', phoneme)
         mel_length = len(phoneme)
         masked_idx = np.array(masked_index)
-        
+
         # if sentence is longer than max_mel_length, take a random slice of it
         if mel_length > self.max_mel_length:
             random_start = np.random.randint(0, mel_length - self.max_mel_length)
