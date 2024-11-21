@@ -9,22 +9,22 @@ export LC_NUMERIC="en_US.UTF-8"
 # Default params
 EXP="map_tokens"
 QUEUE="default"
-HOURS=24
+HOURS=168
 # QSUB ARGUMENTS
 MEM=64gb
 LSCRATCH=20gb
 NCPUS=4
 INTB=map_tokens.ipynb
 
-if [[ "$#" -lt 2 ]]; then
+if [[ "$#" -lt 1 ]]; then
      echo "Usage: run_map.sh cfg [n_cpus]"
      exit 1
 fi
 
 CFG=$1
 
-if [[ "$#" -gt 2 ]]; then
-     NCPUS=$3
+if [[ "$#" -gt 1 ]]; then
+     NCPUS=$2
 fi
 
 # Select argument
