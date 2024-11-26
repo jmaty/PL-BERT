@@ -15,32 +15,32 @@ MODELS=""
 # QSUB ARGUMENTS
 MEM=64gb
 LSCRATCH=20gb
+NCPUS=8
+INTB=train.ipynb
 
-if [[ "$#" -lt 2 ]]; then
-     echo "Usage: run_train_jupyter.sh cfg notebook [specification: iti<0-1> dgx gpu<0-3>] [hours] [runs] [jobid]"
+if [[ "$#" -lt 1 ]]; then
+     echo "Usage: run_train.sh cfg [specification: iti<0-1> dgx gpu<0-3>] [hours] [runs] [jobid]"
      exit 1
 fi
+
+# configuration file
+CFG=$1
+
 if [[ "$#" -gt 1 ]]; then
-     # configuration file
-     CFG=$1
-     # I/O Jupyter notebook
-     INTB=$2
+     # specification to run on (iti, gdx, gpu<0-3>)
+     SPEC=$2
 fi
 if [[ "$#" -gt 2 ]]; then
-     # specification to run on (iti, gdx, gpu<0-3>)
-     SPEC=$3
+     # Number of hours
+     HOURS=$3
 fi
 if [[ "$#" -gt 3 ]]; then
-     # Number of hours
-     HOURS=$4
+     #  Number of runs
+     RUNS=$4
 fi
 if [[ "$#" -gt 4 ]]; then
-     #  Number of runs
-     RUNS=$5
-fi
-if [[ "$#" -gt 5 ]]; then
      # JOBID to continue run
-     JOBID=$6
+     JOBID=$5
 fi
 
 # Check dependencies
@@ -92,7 +92,7 @@ fi
 [[ $HOURS -gt 24 ]] && [[ $SPEC == gpu? ]] && QUEUE="${QUEUE}_long"
 
 # Select argument
-SELECT="-l select=1:ncpus=2:mem=$MEM:scratch_local=$LSCRATCH:ngpus=1$CLUSTER"
+SELECT="-l select=1:ncpus=$NCPUS:mem=$MEM:scratch_local=$LSCRATCH:ngpus=1$CLUSTER"
 # Walltime argument
 WALLTIME="-l walltime=$HOURS:00:00"
 
@@ -110,12 +110,12 @@ SINGULARITY=/storage/plzen4-ntis/projects/singularity/papermill_23.12-latest.sh
 
 # Run the script sequentially with the given number of repetions `RUNS`
 for i in $(seq 1 $RUNS); do
-     ONTB=output_notebooks/$(basename "$INTB" .ipynb)_"$EXP"-$i.$TIMESTEP.ipynb
+     ONTB=outputs/notebooks/$(basename "$INTB" .ipynb)_"$EXP"-$i.$TIMESTEP.ipynb
      # Run PBS script
      JOBID=$(qsub -N "$EXP" \
           $QUEUE \
           -j oe \
-          -o output_logs/$EXP.$TIMESTEP.log \
+          -o outputs/logs/$EXP.$TIMESTEP.log \
           $WALLTIME \
           $SELECT \
           $DEPS \
