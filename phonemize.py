@@ -8,11 +8,11 @@ def phonemize(text, phonemizer, tokenizer, punctuation):
 
     try:  # Phonify input text (sentence)
         phonemizer.ssml_parse(text.lower())
-    except RuntimeError as e:
+    except RuntimeError:
         print('[!] Phonemizing failed in tts_tool => skipping\n')
         print()
         raise
-    
+
     ph_sentences = list(phonemizer.to_sentences_phon())
     if len(ph_sentences) > 1:
         print(f'[!] Phonemizing returned multiple sentences => using only the first one:\n{ph_sentences[0]}')
