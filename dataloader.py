@@ -47,7 +47,7 @@ class FilePathDataset(torch.utils.data.Dataset):
     def __len__(self):
         return len(self.data)
 
-    def __getitem__(self, idx):   
+    def __getitem__(self, idx):
         phwords = self.data[idx]['phonemes'] # list of phonetic words
         input_ids = self.data[idx]['input_ids'] # list of word IDs
 
@@ -64,9 +64,9 @@ class FilePathDataset(torch.utils.data.Dataset):
         for phw, wid in zip(phwords, input_ids):
 
             # Extend words with repeated word ID and a word separator
-            # - word ID is repeated number of phonemes times
+            # - word ID is repeated number-of-phonemes times
             # - each word ID is a list of word-piece IDs
-            # - word separator is a appended as a 1-element list with its ID
+            # - word separator is appended as a 1-element list with its ID
             # words.extend([wid]*len(phw) + [self.word_separator])
             if phw.startswith('##'): # Processing subword
                 phw = phw.removeprefix('##') # Remove word-piece prefix
@@ -75,9 +75,9 @@ class FilePathDataset(torch.utils.data.Dataset):
             else: # Processing whole word or a beginning of a word
                 # Add space between words
                 word_ids.extend(([self.word_separator] if word_ids else []) + [wid]*len(phw))
-                # Add space between phonetic words
-                gt_phsent += (" " if gt_phsent else "") + phw
-                # Add space between ground-truth phoneme words
+                # Add space between ground-truth phonetic words
+                gt_phsent += (self.token_separator if gt_phsent else "") + phw
+                # Add space between masked phoneme words
                 masked_phsent += self.token_separator if masked_phsent else ""
 
             # Determine whether to mask the word
@@ -89,11 +89,11 @@ class FilePathDataset(torch.utils.data.Dataset):
                     else:
                         masked_phsent += phw
                 else:
-                    masked_phsent += self.token_mask * len(phw) # masked
+                    masked_phsent += self.token_mask * len(phw) # mask the whole phonet. word
                 # Track masked indices
                 masked_index.extend((np.arange(len(masked_phsent) - len(phw), len(masked_phsent))).tolist())
             else:
-                masked_phsent += phw # ground-truth
+                masked_phsent += phw # do not mask: add ground-truth phonetic word
 
         # masked_phsent: masked phoneme string with spaces between words
         logger.debug("masked phsent (%d): %s", len(masked_phsent), masked_phsent)
@@ -122,7 +122,7 @@ class FilePathDataset(torch.utils.data.Dataset):
         gt_ph_ids = self.text_cleaner(gt_phsent)
         logger.debug("GT ph IDs (%d): %s", len(gt_ph_ids), gt_ph_ids)
 
-        # words: word IDs, each word = word ID repeated word_length_in_phonemes times
+        # word_ids: word IDs, each word_id = word ID repeated word_length_in_phonemes times
         # with word_separator ID in between words
         logger.debug("word IDs (%d): %s", len(word_ids), word_ids)
 
@@ -132,7 +132,7 @@ class FilePathDataset(torch.utils.data.Dataset):
 
         assert len(masked_ph_ids) == len(gt_ph_ids),\
             f'phonemes: {len(masked_ph_ids)} vs labels: {len(gt_ph_ids)}'
-        assert len(gt_ph_ids) == len(word_ids),\
+        assert len(gt_ph_ids) == len(mapped_word_ids),\
             f'labels: {len(gt_ph_ids)} vs words: {len(word_ids)}\n{gt_phsent}\n{word_ids}'
 
         return (
@@ -170,11 +170,11 @@ class Collater(object):
         input_lengths = []
         masked_indices = []
 
-        for bid, (phoneme, word, label, masked_index) in enumerate(batch):
-            text_size = phoneme.size(0)
-            word_ids[bid, :text_size] = word
-            gt_ph_ids[bid, :text_size] = label
-            masked_ph_ids[bid, :text_size] = phoneme
+        for bid, (masked_ph_id, word_id, gt_ph_id, masked_index) in enumerate(batch):
+            text_size = masked_ph_id.size(0)
+            word_ids[bid, :text_size] = word_id
+            gt_ph_ids[bid, :text_size] = gt_ph_id
+            masked_ph_ids[bid, :text_size] = masked_ph_id
             input_lengths.append(text_size)
             masked_indices.append(masked_index)
 
