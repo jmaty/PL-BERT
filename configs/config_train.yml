@@ -1,11 +1,11 @@
 log_dir: "models/cs-wikipedia"
 mixed_precision: "fp16"
 data_folder: "datasets/cz-wikipedia.processed"
-batch_size: 32 # 192
+batch_size: 24 # 192
 save_interval: 50000
 log_interval: 10
 num_process: 1 # number of GPUs
-num_steps: 6000000 # number of training steps (1000000)
+num_steps: 8000000 # number of training steps (1000000)
 
 dataset_params:
     tokenizer: "fav-kky/FERNET-C5"
