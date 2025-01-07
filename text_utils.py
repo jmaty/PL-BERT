@@ -20,8 +20,29 @@ class TextCleaner:
     def declean(self, indexes):
         return ''.join([self._symbols[i] for i in indexes])
 
+    def check(self, symbols):
+        """
+        Checks if every input symbol exists is defined.
+    
+        Args:
+            symbols (str): The input string of characters to be checked.
+
+        Returns:
+            bool: True if all input symbols are defined, otherwise False.
+        """
+        # Convert the input string into a set of unique characters
+        unique_chars = set(symbols)
+         # Get the set of keys from the dictionary
+        valid_symbols = set(self._symbols.keys())
+        # Check if all unique characters are a subset of the dictionary keys
+        return unique_chars.issubset(valid_symbols)
+
     def __len__(self):
         return len(self._symbols)
+
+    def __contains__(self, symbols):
+        # Definuje chování operátoru 'in'
+        return self.check(symbols)
 
     @property
     def symbols(self):

@@ -9,7 +9,7 @@ export LC_NUMERIC="en_US.UTF-8"
 # Default params
 EXP="map_tokens"
 QUEUE="default"
-HOURS=48
+HOURS=12
 # QSUB ARGUMENTS
 MEM=64gb
 LSCRATCH=20gb

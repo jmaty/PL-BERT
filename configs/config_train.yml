@@ -1,19 +1,17 @@
 log_dir: "models/cs-wikipedia"
 mixed_precision: "fp16"
 data_folder: "datasets/cz-wikipedia.processed"
-batch_size: 24
+batch_size: 24 # 192
 save_interval: 50000
 log_interval: 10
 num_process: 1 # number of GPUs
-num_steps: 1000000
+num_steps: 8000000 # number of training steps (1000000)
 
 dataset_params:
     tokenizer: "fav-kky/FERNET-C5"
     token_separator: " " # token used for phoneme separator (space)
     token_mask: "M" # token used for phoneme mask (M)
     word_separator: 18065 # token used for word separator (|)
-    # word_separator: 291686 # token used for word separator (ʃajmijef) - word-based phonetic CS tokenizer
-    # word_separator: 3039 # token used for word separator (<formula>) - original word-based EN tokenizer
     token_maps: "token_maps.pkl"    # token map path
     symbol_dict_path: "symbol_dict.csv"  # symbol definition dictionary
     

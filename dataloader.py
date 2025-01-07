@@ -6,8 +6,6 @@ import random
 
 import numpy as np
 import torch
-import torch.nn.functional as F
-from torch import nn
 from torch.utils.data import DataLoader
 
 from text_utils import TextCleaner, load_symbol_dict
@@ -50,49 +48,57 @@ class FilePathDataset(torch.utils.data.Dataset):
         return len(self.data)
 
     def __getitem__(self, idx):
-        phonemes = self.data[idx]['phonemes']   # list of phonetic words
+        phwords = self.data[idx]['phonemes'] # list of phonetic words
         input_ids = self.data[idx]['input_ids'] # list of word IDs
 
-        # print(phonemes)
-        # print(input_ids)
+        logger.debug("phwords (%d): %s", len(phwords), phwords)
+        logger.debug("word IDs (%d): %s", len(input_ids), input_ids)
 
-        words = []      # list of word IDs with each ID repeated word_length_in_phonemes times
-        labels = ""     # phonetic sentence with ground-truth phonemes
-        phoneme = ""    # (masked) phonetic sentence
+        word_ids = []      # list of word IDs with each ID repeated word_length_in_phonemes times
+        gt_phsent = ""     # phonetic sentence with ground-truth phonemes
+        masked_phsent = ""    # (masked) phonetic sentence
 
-        phoneme_list = ''.join(phonemes)    # phoneme string without word separators
-        # print("phoneme_list:", phoneme_list)
+        phstring = ''.join(phwords)    # phoneme string without word separators
 
         masked_index = []
-        for phw, wid in zip(phonemes, input_ids):
+        for phw, wid in zip(phwords, input_ids):
+
             # Extend words with repeated word ID and a word separator
-            # - word ID is repeated number of phonemes times
+            # - word ID is repeated number-of-phonemes times
             # - each word ID is a list of word-piece IDs
-            # - word separator is a appended as a 1-element list with its ID
-            words.extend([wid]*len(phw) + [[self.word_separator]])
-            # Add space between ground-truth phoneme words
-            labels += phw + " "
+            # - word separator is appended as a 1-element list with its ID
+            # words.extend([wid]*len(phw) + [self.word_separator])
+            if phw.startswith('##'): # Processing subword
+                phw = phw.removeprefix('##') # Remove word-piece prefix
+                word_ids.extend([wid]*len(phw)) # Do not prepend space
+                gt_phsent += phw
+            else: # Processing whole word or a beginning of a word
+                # Add space between words
+                word_ids.extend(([self.word_separator] if word_ids else []) + [wid]*len(phw))
+                # Add space between ground-truth phonetic words
+                gt_phsent += (self.token_separator if gt_phsent else "") + phw
+                # Add space between masked phoneme words
+                masked_phsent += self.token_separator if masked_phsent else ""
 
             # Determine whether to mask the word
             if np.random.rand() < self.word_mask_prob:
                 if np.random.rand() < self.replace_prob:
                     # Randomize or keep original phoneme based on probabilities
                     if np.random.rand() < (self.phoneme_mask_prob / self.replace_prob):
-                        phoneme += ''.join(phoneme_list[np.random.randint(0, len(phoneme_list))] for _ in range(len(phw))) # randomized
+                        masked_phsent += ''.join(phstring[np.random.randint(0, len(phstring))] for _ in range(len(phw))) # randomized
                     else:
-                        phoneme += phw
+                        masked_phsent += phw
                 else:
-                    phoneme += self.token_mask * len(phw) # masked
+                    masked_phsent += self.token_mask * len(phw) # mask the whole phonet. word
                 # Track masked indices
-                masked_index.extend((np.arange(len(phoneme) - len(phw), len(phoneme))).tolist())
+                masked_index.extend((np.arange(len(masked_phsent) - len(phw), len(masked_phsent))).tolist())
             else:
-                phoneme += phw # ground-truth
+                masked_phsent += phw # do not mask: add ground-truth phonetic word
 
-            phoneme += self.token_separator # add space between phonetic words
+        # masked_phsent: masked phoneme string with spaces between words
+        logger.debug("masked phsent (%d): %s", len(masked_phsent), masked_phsent)
 
-        # phoneme: masked phoneme string with spaces between words
-        # print('phoneme:', phoneme)
-        mel_length = len(phoneme)
+        mel_length = len(masked_phsent)
         masked_idx = np.array(masked_index)
 
         # if sentence is longer than max_mel_length, take a random slice of it
@@ -100,42 +106,41 @@ class FilePathDataset(torch.utils.data.Dataset):
             random_start = np.random.randint(0, mel_length - self.max_mel_length)
             slice_end = random_start + self.max_mel_length
             # Slicing phoneme, words and labels
-            phoneme = phoneme[random_start:slice_end]
-            words = words[random_start:slice_end]
-            labels = labels[random_start:slice_end]
+            masked_phsent = masked_phsent[random_start:slice_end]
+            word_ids = word_ids[random_start:slice_end]
+            gt_phsent = gt_phsent[random_start:slice_end]
             # adjust masked_index for the slice
             masked_index = [m - random_start for m in masked_idx if random_start <= m < slice_end]
         else:
             masked_index = masked_idx
 
-        phoneme = self.text_cleaner(phoneme)
-        # phoneme: (masked) phoneme IDs incl. punctuation and spaces between words
-        # print('phoneme after cleaner:', phoneme)
-        labels = self.text_cleaner(labels)
-        # labels: ground-truth phoneme label IDs incl. punctuation and spaces between words
+        # masked phoneme IDs incl. punctuation and spaces between words
+        masked_ph_ids = self.text_cleaner(masked_phsent)
+        logger.debug("masked ph IDs (%d): %s", len(masked_ph_ids), masked_ph_ids)
 
-        # words: word IDs, each word = word ID repeated word_length_in_phonemes times
+        # ground-truth phoneme label IDs incl. punctuation and spaces between words
+        gt_ph_ids = self.text_cleaner(gt_phsent)
+        logger.debug("GT ph IDs (%d): %s", len(gt_ph_ids), gt_ph_ids)
+
+        # word_ids: word IDs, each word_id = word ID repeated word_length_in_phonemes times
         # with word_separator ID in between words
+        logger.debug("word IDs (%d): %s", len(word_ids), word_ids)
 
-        # print("words", words)
-        # print("phoneme", phoneme)
-        # print("labels", labels)
+        # Map word tokens
+        mapped_word_ids = [self.token_maps[w]['token'] for w in word_ids]
+        logger.debug("mapped word IDs (%d): %s", len(mapped_word_ids), mapped_word_ids)
 
-        words = [self.token_maps[tuple(w)]['token'] for w in words]
+        assert len(masked_ph_ids) == len(gt_ph_ids),\
+            f'phonemes: {len(masked_ph_ids)} vs labels: {len(gt_ph_ids)}'
+        assert len(gt_ph_ids) == len(mapped_word_ids),\
+            f'labels: {len(gt_ph_ids)} vs words: {len(word_ids)}\n{gt_phsent}\n{word_ids}'
 
-        assert len(phoneme) == len(words), f'phonemes: {len(phoneme)} vs words: {len(words)}'
-        assert len(phoneme) == len(labels)
-
-        phonemes = torch.LongTensor(phoneme)
-        labels = torch.LongTensor(labels)
-        words = torch.LongTensor(words)
-
-        # Return:
-        # - phonemes: list of (masked) phoneme IDs incl. punctuation and spaces between words
-        # - words: list of word IDs;  each word = word ID repeated word_length_in_phonemes times
-        # - labels: list of ground-truth phoneme label IDs incl. punctuation and spaces between words
-        # - masked_index: list of masked phoneme indices
-        return phonemes, words, labels, masked_index
+        return (
+            torch.LongTensor(masked_ph_ids), # list of (masked) phoneme IDs incl. punctuation and spaces between words
+            torch.LongTensor(mapped_word_ids), # list of word IDs;  each word = word ID repeated word_length_in_phonemes times
+            torch.LongTensor(gt_ph_ids), # list of ground-truth phoneme label IDs incl. punctuation and spaces between words
+            masked_index, # list of masked phoneme indices
+        )
 
 class Collater(object):
     """
@@ -146,7 +151,7 @@ class Collater(object):
     def __init__(self, return_wave=False):
         self.text_pad_index = 0
         self.return_wave = return_wave
-        
+
 
     def __call__(self, batch):
         batch_size = len(batch)
@@ -159,27 +164,27 @@ class Collater(object):
         # get max length
         max_text_length = max(b[1].shape[0] for b in batch)
 
-        words = torch.zeros((batch_size, max_text_length)).long()
-        labels = torch.zeros((batch_size, max_text_length)).long()
-        phonemes = torch.zeros((batch_size, max_text_length)).long()
+        word_ids = torch.zeros((batch_size, max_text_length)).long()
+        gt_ph_ids = torch.zeros((batch_size, max_text_length)).long()
+        masked_ph_ids = torch.zeros((batch_size, max_text_length)).long()
         input_lengths = []
         masked_indices = []
 
-        for bid, (phoneme, word, label, masked_index) in enumerate(batch):
-            text_size = phoneme.size(0)
-            words[bid, :text_size] = word
-            labels[bid, :text_size] = label
-            phonemes[bid, :text_size] = phoneme
+        for bid, (masked_ph_id, word_id, gt_ph_id, masked_index) in enumerate(batch):
+            text_size = masked_ph_id.size(0)
+            word_ids[bid, :text_size] = word_id
+            gt_ph_ids[bid, :text_size] = gt_ph_id
+            masked_ph_ids[bid, :text_size] = masked_ph_id
             input_lengths.append(text_size)
             masked_indices.append(masked_index)
 
-        # Return:
-        # - words: list of word IDs;  each word = word ID repeated word_length_in_phonemes times
-        # - labels: list of ground-truth phoneme label IDs incl. punctuation and spaces between words
-        # - phonemes: list of (masked) phoneme IDs incl. punctuation and spaces between words
-        # - input_lengths: list of lengths of input phoneme strings
-        # - masked_index: list of masked phoneme indices
-        return words, labels, phonemes, input_lengths, masked_indices
+        return (
+            word_ids, # list of word IDs;  each word = word ID repeated word_length_in_phonemes times
+            gt_ph_ids, # list of ground-truth phoneme label IDs incl. punctuation and spaces between words
+            masked_ph_ids, # list of (masked) phoneme IDs incl. punctuation and spaces between words
+            input_lengths, # list of lengths of input phoneme strings
+            masked_indices, # list of masked phoneme indices
+        )
 
 
 def build_dataloader(df,

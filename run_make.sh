@@ -9,7 +9,7 @@ export LC_NUMERIC="en_US.UTF-8"
 # Default params
 EXP="make_dataset"
 QUEUE="default"
-HOURS=72
+HOURS=24
 # QSUB ARGUMENTS
 MEM=64gb
 LSCRATCH=20gb
